@@ -23,7 +23,7 @@ public class User {
     @NonNull
     public String passwordHash = "";
 
-    /** Полное имя, отображается в профиле/дашборде. */
+    /** Полное имя (для профиля/дашборда). */
     @NonNull
     public String fullName = "";
 
