@@ -1,5 +1,17 @@
 <resources>
     <string name="app_name">zabello</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Заголовки экранов -->
+    <string name="title_dashboard">Сводная</string>
+    <string name="title_reference">Статьи</string>
+    <string name="title_stats">Общая статистика</string>
+    <string name="title_profile">Профиль</string>
+
+    <!-- Подписи в нижней панели -->
+    <string name="nav_dashboard">Главная</string>
+    <string name="nav_reference">Статьи</string>
+    <string name="nav_stats">Статистика</string>
+    <string name="nav_profile">Профиль</string>
+
+    <string name="hello_blank_fragment">Заглушка</string>
 </resources>
