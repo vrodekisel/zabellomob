@@ -14,6 +14,7 @@ import com.example.zabello.R;
 import com.example.zabello.data.entity.User;
 import com.example.zabello.repository.HealthRepository;
 import com.example.zabello.utils.ValidationLogic;
+import com.example.zabello.domain.session.SessionManager;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -31,6 +32,13 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Автологин без мигания экрана логина:
+        if (SessionManager.getInstance(this).isLoggedIn()) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+            return;
+        }
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_register);
 
@@ -102,6 +110,8 @@ public class RegisterActivity extends AppCompatActivity {
 
                 repo.insertUser(u, id -> runOnUiThread(() -> {
                     if (id > 0) {
+                        // NEW: сохраняем userId в сессию
+                        SessionManager.getInstance(this).setUserId(id); // NEW
                         Toast.makeText(this, "Регистрация успешна", Toast.LENGTH_SHORT).show();
                         openMainAndFinish();
                     } else {
@@ -128,6 +138,8 @@ public class RegisterActivity extends AppCompatActivity {
         String hash = ValidationLogic.sha256(pass);
         repo.signIn(login, hash, user -> runOnUiThread(() -> {
             if (user != null) {
+                // NEW: сохраняем userId в сессию
+                SessionManager.getInstance(this).setUserId(user.id); // NEW
                 Toast.makeText(this, "Добро пожаловать", Toast.LENGTH_SHORT).show();
                 openMainAndFinish();
             } else {
