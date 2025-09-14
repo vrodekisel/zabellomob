@@ -12,9 +12,7 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+
         vectorDrawables { useSupportLibrary = true }
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -46,35 +44,46 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    // нужно для Robolectric, если в unit-тестах используешь ApplicationProvider и ресурсы
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+    }
 }
 
 dependencies {
+    // --- UI / base ---
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-
-    implementation("androidx.lifecycle:lifecycle-viewmodel:2.8.6")
-    implementation("androidx.lifecycle:lifecycle-livedata:2.8.6")
-    implementation("androidx.lifecycle:lifecycle-runtime:2.8.6")
-
-    implementation("androidx.room:room-runtime:2.6.1")
-    annotationProcessor("androidx.room:room-compiler:2.6.1")
-
-    implementation("androidx.work:work-runtime:2.9.1")
-    // Удобные экстеншены (можно и в Java-проекте)
-    implementation("androidx.room:room-ktx:2.6.1")               // транзакции/корутины; часть API пригодится даже в Java-проекте
-    implementation("androidx.core:core-ktx:1.13.1")               // полезные утилиты
-
-    // UI-слои для списков и навигации (для фрагментов/дроуэра, как в курсовой)
+    implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.navigation:navigation-fragment:2.8.2")
     implementation("androidx.navigation:navigation-ui:2.8.2")
 
-    // Тесты Room (если планируешь unit/instrumented)
-    testImplementation("androidx.room:room-testing:2.6.1")
+    // --- Lifecycle ---
+    implementation("androidx.lifecycle:lifecycle-viewmodel:2.8.6")
+    implementation("androidx.lifecycle:lifecycle-livedata:2.8.6")
+    implementation("androidx.lifecycle:lifecycle-runtime:2.8.6")
 
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
+    // --- Room ---
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1") // часть API пригодится даже в Java
+    annotationProcessor("androidx.room:room-compiler:2.6.1")
+
+    // --- WorkManager / Core ---
+    implementation("androidx.work:work-runtime:2.9.1")
+    implementation(libs.core)
+    implementation(libs.firebase.firestore)
+
+    // --- Unit tests (src/test/java) ---
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("androidx.test:core:1.5.0")              // ApplicationProvider
+    testImplementation("org.robolectric:robolectric:4.12.2")    // запуск Android-кода на JVM
+    testImplementation("androidx.room:room-testing:2.6.1")      // Room helpers
+
+    // --- Instrumented tests (src/androidTest/java) ---
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
