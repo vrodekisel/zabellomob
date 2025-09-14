@@ -28,4 +28,15 @@
         android:name="com.example.zabello.fragments.ProfileFragment"
         android:label="@string/nav_profile"
         tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/articleDetailsFragment"
+        android:name="com.example.zabello.fragments.ArticleDetailsFragment"
+        android:label="@string/title_reference"
+        tools:layout="@layout/fragment_article_details" />
+
+    <action
+        android:id="@+id/action_reference_to_articleDetails"
+        app:destination="@id/articleDetailsFragment" />
+
 </navigation>
