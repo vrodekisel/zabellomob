@@ -28,4 +28,11 @@ public interface ArticleDao {
 
     @Query("SELECT * FROM articles WHERE slug = :slug LIMIT 1")
     LiveData<Article> getBySlug(String slug);
+
+    // --- Новое: upsert-методы для кэша из удалённого источника ---
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    long upsert(Article article);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    List<Long> upsertAll(List<Article> articles);
 }

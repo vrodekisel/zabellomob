@@ -1,6 +1,8 @@
 package com.example.zabello.viewmodel;
 
 import android.app.Application;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -15,21 +17,40 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/** ViewModel раздела «Справочник / Статьи»: локальный оффлайн-поиск + удалённый поиск с кэшем. */
 public class ReferenceViewModel extends AndroidViewModel {
 
     private final HealthRepository repo;
-    private final LiveData<List<Article>> all;
-    private final MutableLiveData<String> query = new MutableLiveData<>("");
+    private final LiveData<List<Article>> all;           // всё из Room
     private final MediatorLiveData<List<Article>> filtered = new MediatorLiveData<>();
+    private final MutableLiveData<String> query = new MutableLiveData<>("");
+
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private Runnable debouncedTask;
+    private static final long DEBOUNCE_MS = 350L;
 
     public ReferenceViewModel(@NonNull Application app) {
         super(app);
         repo = new HealthRepository(app);
-
         all = repo.getAllArticles();
 
-        filtered.addSource(all, a -> apply());
-        filtered.addSource(query, s -> apply());
+        filtered.addSource(all, list -> apply());
+        filtered.addSource(query, q -> {
+            apply();
+            scheduleRemote(q);
+        });
+    }
+
+    private void scheduleRemote(String q) {
+        if (debouncedTask != null) handler.removeCallbacks(debouncedTask);
+        debouncedTask = () -> {
+            String s = q != null ? q.trim() : "";
+            if (s.length() < 2) return; // не дёргаем API на короткие строки
+            repo.searchArticlesRemote(s, inserted -> {
+                // Ничего не делаем: LiveData all обновится автоматически при upsert в Room
+            });
+        };
+        handler.postDelayed(debouncedTask, DEBOUNCE_MS);
     }
 
     private void apply() {
