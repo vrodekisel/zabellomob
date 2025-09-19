@@ -39,4 +39,39 @@
     <string name="stats_chip_90">90 дней</string>
     <string name="stats_chip_all">Все</string>
 
+    <!-- Parameter types and options -->
+    <string name="param_temp">Температура</string>
+    <string name="param_bp_sys">Давление (сист.)</string>
+    <string name="param_bp_dia">Давление (диаст.)</string>
+    <string name="param_hr">Пульс</string>
+    <string name="param_sleep">Сон</string>
+    <string name="param_mood">Настроение</string>
+    <string name="param_food">Питание</string>
+    <string name="param_wellbeing">Общее самочувствие</string>
+    <string name="param_weight">Вес</string>
+    <string name="param_glucose">Глюкоза</string>
+    <string name="param_activity">Активность</string>
+
+    <string name="option_mood_great">Отличное</string>
+    <string name="option_mood_good">Хорошее</string>
+    <string name="option_mood_neutral">Нейтральное</string>
+    <string name="option_mood_bad">Плохое</string>
+
+    <string name="option_food_good">Питался хорошо</string>
+    <string name="option_food_under">Недоедал</string>
+    <string name="option_food_over">Переедал</string>
+    <string name="option_food_fastfood">Ел много фастфуда</string>
+
+    <string name="option_activity_none">Не занимался</string>
+    <string name="option_activity_light">Лёгкая</string>
+    <string name="option_activity_medium">Средняя</string>
+    <string name="option_activity_high">Высокая</string>
+
+    <string name="hint_bp_sys">Систолическое</string>
+    <string name="hint_bp_dia">Диастолическое</string>
+    <string name="hint_text">Текст</string>
+    <string name="label_skip">Оставить прочерк (пропустить)</string>
+    <string name="msg_skipped">Показатель пропущен</string>
+    <string name="msg_saved">Сохранено</string>
+    <string name="msg_select_type">Выберите показатель</string>
 </resources>

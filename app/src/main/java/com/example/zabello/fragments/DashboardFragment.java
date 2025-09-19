@@ -54,6 +54,14 @@ public class DashboardFragment extends Fragment {
 
         viewModel = new ViewModelProvider(requireActivity()).get(DashboardViewModel.class);
 
+        viewModel.getTypes().observe(getViewLifecycleOwner(), types -> {
+            if (types != null) {
+                java.util.HashMap<Long, String> map = new java.util.HashMap<>();
+                for (com.example.zabello.data.entity.ParameterType t : types) map.put(t.id, t.title);
+                adapter.setTypeTitles(map);
+            }
+        });
+
         viewModel.getWelcomeText().observe(getViewLifecycleOwner(), text -> {
             if (tvDashboard != null) tvDashboard.setText(text);
         });
@@ -66,11 +74,15 @@ public class DashboardFragment extends Fragment {
                 Toast.makeText(requireContext(), "Сессия не найдена", Toast.LENGTH_SHORT).show();
                 return;
             }
-
             ParameterEntryDialog.show(
                     getChildFragmentManager(),
                     userId,
-                    (saved) -> Toast.makeText(requireContext(), "Добавлено", Toast.LENGTH_SHORT).show()
+                    (saved) -> {
+                        // Гарантируем вызов тоста на главном потоке
+                        if (isAdded()) requireActivity().runOnUiThread(
+                                () -> Toast.makeText(requireContext(), "Добавлено", Toast.LENGTH_SHORT).show()
+                        );
+                    }
             );
         });
     }

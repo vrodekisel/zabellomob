@@ -16,15 +16,26 @@ import com.example.zabello.data.entity.ParameterEntry;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
+/** Адаптер ленты показателей: выводим название типа, значение/заметку и дату. */
 public class ParameterEntryAdapter extends ListAdapter<ParameterEntry, ParameterEntryAdapter.VH> {
 
     private int anomalyCount = 0;
+    private final Map<Long, String> typeTitles = new HashMap<>();
 
     public ParameterEntryAdapter() {
         super(DIFF);
+    }
+
+    public void setTypeTitle(long typeId, String title) { typeTitles.put(typeId, title); }
+    public void setTypeTitles(Map<Long, String> map) {
+        typeTitles.clear();
+        if (map != null) typeTitles.putAll(map);
+        notifyDataSetChanged();
     }
 
     public int getCurrentAnomalyCount() { return anomalyCount; }
@@ -38,14 +49,15 @@ public class ParameterEntryAdapter extends ListAdapter<ParameterEntry, Parameter
 
                 @Override
                 public boolean areContentsTheSame(@NonNull ParameterEntry oldItem, @NonNull ParameterEntry newItem) {
+                    boolean tsEq = (oldItem.timestamp == null && newItem.timestamp == null)
+                            || (oldItem.timestamp != null && newItem.timestamp != null
+                            && oldItem.timestamp.getTime() == newItem.timestamp.getTime());
+                    boolean noteEq = (oldItem.note == null && newItem.note == null)
+                            || (oldItem.note != null && oldItem.note.equals(newItem.note));
                     return oldItem.userId == newItem.userId
                             && oldItem.typeId == newItem.typeId
                             && Float.compare(oldItem.value, newItem.value) == 0
-                            && ((oldItem.timestamp == null && newItem.timestamp == null)
-                            || (oldItem.timestamp != null && newItem.timestamp != null
-                            && oldItem.timestamp.getTime() == newItem.timestamp.getTime()))
-                            && ((oldItem.note == null && newItem.note == null)
-                            || (oldItem.note != null && oldItem.note.equals(newItem.note)));
+                            && tsEq && noteEq;
                 }
             };
 
@@ -54,10 +66,10 @@ public class ParameterEntryAdapter extends ListAdapter<ParameterEntry, Parameter
 
     @Override
     public void submitList(List<ParameterEntry> list) {
-        // простой подсчёт "аномалий" — подсветим записи со значением < 0 как ошибочные
+        // "Аномалией" считаем отрицательные числовые значения БЕЗ заметки
         anomalyCount = 0;
         if (list != null) {
-            for (ParameterEntry e : list) if (e.value < 0f) anomalyCount++;
+            for (ParameterEntry e : list) if (e.value < 0f && (e.note == null || e.note.isEmpty())) anomalyCount++;
         }
         super.submitList(list);
     }
@@ -69,14 +81,20 @@ public class ParameterEntryAdapter extends ListAdapter<ParameterEntry, Parameter
 
     @Override public void onBindViewHolder(@NonNull VH h, int position) {
         ParameterEntry e = getItem(position);
-        String title = h.itemView.getContext().getString(R.string.item_entry_title, e.typeId, e.value);
-        h.tvTitle.setText(title);
+        String title = typeTitles.containsKey(e.typeId) ? typeTitles.get(e.typeId) : h.itemView.getContext().getString(R.string.item_entry_title, e.typeId, e.value);
+
+        String valuePart;
+        if (e.note != null && !e.note.isEmpty()) {
+            valuePart = e.note;
+        } else {
+            valuePart = String.format(Locale.getDefault(), "%.2f", e.value);
+        }
+        h.tvTitle.setText(title + " — " + valuePart);
 
         Date ts = e.timestamp != null ? e.timestamp : new Date();
         h.tvSubtitle.setText(df.format(ts));
 
-        // примитивная подсветка "аномалий"
-        h.indicator.setVisibility(e.value < 0f ? View.VISIBLE : View.GONE);
+        h.indicator.setVisibility(e.value < 0f && (e.note == null || e.note.isEmpty()) ? View.VISIBLE : View.GONE);
     }
 
     static class VH extends RecyclerView.ViewHolder {
