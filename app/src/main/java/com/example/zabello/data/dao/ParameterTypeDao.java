@@ -29,6 +29,9 @@ public interface ParameterTypeDao {
     @Query("SELECT * FROM parameter_types WHERE id = :id LIMIT 1")
     LiveData<ParameterType> getById(long id);
 
+    @Query("SELECT * FROM parameter_types WHERE id = :id LIMIT 1")
+    ParameterType getByIdSync(long id);
+
     @Query("SELECT * FROM parameter_types WHERE code = :code LIMIT 1")
     ParameterType findByCodeSync(String code);
 }

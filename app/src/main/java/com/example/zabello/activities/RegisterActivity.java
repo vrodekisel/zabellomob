@@ -12,9 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.zabello.R;
 import com.example.zabello.data.entity.User;
+import com.example.zabello.domain.session.SessionManager;
 import com.example.zabello.repository.HealthRepository;
 import com.example.zabello.utils.ValidationLogic;
-import com.example.zabello.domain.session.SessionManager;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -27,12 +27,13 @@ public class RegisterActivity extends AppCompatActivity {
     private Button btnRegister;
     private Button btnLogin;
 
-    private boolean isLoginMode = false; // false = Регистрация (по умолчанию), true = Вход
+    private boolean isLoginMode = false; // false — Регистрация (по умолчанию), true — Вход
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Автологин без мигания экрана логина:
+
+        // Автологин без мигания экрана логина
         if (SessionManager.getInstance(this).isLoggedIn()) {
             startActivity(new Intent(this, MainActivity.class));
             finish();
@@ -56,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         btnRegister.setOnClickListener(v -> {
             if (isLoginMode) {
-                // если мы в режиме Входа, по нажатию «Зарегистрироваться» переключаемся в Регистрацию
+                // если находимся в режиме Входа — переключаемся в Регистрацию
                 applyMode(false);
                 return;
             }
@@ -65,7 +66,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         btnLogin.setOnClickListener(v -> {
             if (!isLoginMode) {
-                // если мы в режиме Регистрации, по нажатию «Войти» переключаемся во Вход
+                // если находимся в режиме Регистрации — переключаемся во Вход
                 applyMode(true);
                 return;
             }
@@ -78,7 +79,6 @@ public class RegisterActivity extends AppCompatActivity {
         tvModeTitle.setText(loginMode ? "Вход" : "Регистрация");
         etPasswordConfirm.setVisibility(loginMode ? android.view.View.GONE : android.view.View.VISIBLE);
         etPasswordConfirm.setText("");
-        // Подсказки на кнопках остаются постоянными: «Зарегистрироваться» и «Войти»
     }
 
     private void performRegister() {
@@ -99,26 +99,29 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
+        // 1) Проверяем занят ли логин
         repo.isLoginTaken(login, taken -> runOnUiThread(() -> {
             if (taken) {
                 etLogin.setError("Логин уже занят");
-            } else {
-                User u = new User();
-                u.login = login;
-                u.passwordHash = ValidationLogic.sha256(pass);
-                u.fullName = "";
-
-                repo.insertUser(u, id -> runOnUiThread(() -> {
-                    if (id > 0) {
-                        // NEW: сохраняем userId в сессию
-                        SessionManager.getInstance(this).setUserId(id); // NEW
-                        Toast.makeText(this, "Регистрация успешна", Toast.LENGTH_SHORT).show();
-                        openMainAndFinish();
-                    } else {
-                        Toast.makeText(this, "Ошибка регистрации", Toast.LENGTH_SHORT).show();
-                    }
-                }));
+                return;
             }
+
+            // 2) Регистрируем пользователя
+            User u = new User();
+            u.login = login;
+            u.passwordHash = ValidationLogic.sha256(pass);
+            u.fullName = "";
+
+            repo.insertUser(u, id -> runOnUiThread(() -> {
+                if (id > 0) {
+                    // сохраняем userId в сессию
+                    SessionManager.getInstance(this).setUserId(id);
+                    Toast.makeText(this, "Регистрация успешна", Toast.LENGTH_SHORT).show();
+                    openMainAndFinish();
+                } else {
+                    Toast.makeText(this, "Ошибка регистрации", Toast.LENGTH_SHORT).show();
+                }
+            }));
         }));
     }
 
@@ -136,10 +139,11 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         String hash = ValidationLogic.sha256(pass);
+
+        // Авторизация через репозиторий
         repo.signIn(login, hash, user -> runOnUiThread(() -> {
             if (user != null) {
-                // NEW: сохраняем userId в сессию
-                SessionManager.getInstance(this).setUserId(user.id); // NEW
+                SessionManager.getInstance(this).setUserId(user.id);
                 Toast.makeText(this, "Добро пожаловать", Toast.LENGTH_SHORT).show();
                 openMainAndFinish();
             } else {

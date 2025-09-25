@@ -26,6 +26,9 @@ public interface ParameterEntryDao {
     @Query("SELECT * FROM parameter_entries WHERE userId = :userId ORDER BY timestamp DESC")
     LiveData<List<ParameterEntry>> getByUser(long userId);
 
+    @Query("SELECT * FROM parameter_entries WHERE userId = :userId ORDER BY timestamp DESC LIMIT :limit")
+    List<ParameterEntry> getByUserSync(long userId, int limit);
+
     @Query("SELECT * FROM parameter_entries WHERE userId = :userId AND typeId = :typeId ORDER BY timestamp DESC")
     LiveData<List<ParameterEntry>> getByUserAndType(long userId, long typeId);
 

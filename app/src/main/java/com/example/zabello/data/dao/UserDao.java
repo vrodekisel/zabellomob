@@ -2,7 +2,6 @@ package com.example.zabello.data.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -30,6 +29,7 @@ public interface UserDao {
     @Query("SELECT * FROM users WHERE id = :id LIMIT 1")
     LiveData<User> getById(long id);
 
+    // Эти два метода уже генерируются и отлично подходят под задачи:
     @Query("SELECT * FROM users WHERE login = :login AND passwordHash = :passwordHash LIMIT 1")
     User signInSync(String login, String passwordHash);
 

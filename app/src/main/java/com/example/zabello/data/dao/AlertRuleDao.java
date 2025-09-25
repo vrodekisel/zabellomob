@@ -23,6 +23,11 @@ public interface AlertRuleDao {
     @Query("DELETE FROM alert_rules WHERE id = :id")
     int deleteById(long id);
 
+    // Живые данные для UI (глобальные правила + правила пользователя)
     @Query("SELECT * FROM alert_rules WHERE userId IS NULL OR userId = :userId")
     LiveData<List<AlertRule>> getForUser(Long userId);
+
+    // Синхронно для фоновых задач/репозитория
+    @Query("SELECT * FROM alert_rules WHERE userId IS NULL OR userId = :userId")
+    List<AlertRule> getForUserSync(Long userId);
 }

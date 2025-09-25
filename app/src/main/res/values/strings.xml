@@ -74,4 +74,17 @@
     <string name="msg_skipped">Показатель пропущен</string>
     <string name="msg_saved">Сохранено</string>
     <string name="msg_select_type">Выберите показатель</string>
+
+    <!-- Validation -->
+    <string name="error_required">Поле обязательно</string>
+    <string name="error_number">Введите корректное число</string>
+    <string name="error_range">Допустимый диапазон: %1$.2f – %2$.2f</string>
+
+    <!-- Notifications -->
+    <string name="channel_anomalies_name">Медицинские алерты</string>
+    <string name="channel_anomalies_desc">Уведомления о выходе показателей за допустимые пределы</string>
+    <string name="notif_anomaly_title">Аномалия: %1$s</string>
+    <string name="notif_anomaly_text_value">Получено значение: %1$s.</string>
+    <string name="notif_anomaly_text_rule">Порог правила: %1$s – %2$s.</string>
+    <string name="notif_anomaly_text_type">Нормальный диапазон: %1$s – %2$s.</string>
 </resources>

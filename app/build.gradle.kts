@@ -1,15 +1,16 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("org.jetbrains.kotlin.kapt") version "1.9.25" apply false // чтобы Room точно генерил код
 }
 
 android {
     namespace = "com.example.zabello"
-    compileSdk = 36
+    compileSdk = 34 // 36 ещё preview, стабильная — 34
 
     defaultConfig {
         applicationId = "com.example.zabello"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -45,7 +46,6 @@ android {
         viewBinding = true
     }
 
-    // нужно для Robolectric, если в unit-тестах используешь ApplicationProvider и ресурсы
     testOptions {
         unitTests.isIncludeAndroidResources = true
     }
@@ -69,27 +69,36 @@ dependencies {
 
     // --- Room ---
     implementation("androidx.room:room-runtime:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1") // часть API пригодится даже в Java
+    implementation("androidx.room:room-ktx:2.6.1")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
 
-    // --- WorkManager / Core ---
+    // --- WorkManager ---
     implementation("androidx.work:work-runtime:2.9.1")
+    implementation("androidx.work:work-runtime-ktx:2.9.1")
+
+    // --- Core / Firebase ---
     implementation(libs.core)
     implementation(libs.firebase.firestore)
 
-    // --- Unit tests (src/test/java) ---
+    // --- Unit tests ---
     testImplementation("junit:junit:4.13.2")
-    testImplementation("androidx.test:core:1.5.0")              // ApplicationProvider
-    testImplementation("org.robolectric:robolectric:4.12.2")    // запуск Android-кода на JVM
-    testImplementation("androidx.room:room-testing:2.6.1")      // Room helpers
+    testImplementation("androidx.test:core:1.5.0")
+    testImplementation("org.robolectric:robolectric:4.12.2")
+    testImplementation("androidx.room:room-testing:2.6.1")
 
-    // --- Instrumented tests (src/androidTest/java) ---
+    // --- Instrumented tests ---
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
-    // --- Network: Retrofit + OkHttp ---
+    // --- Network ---
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    // --- Guava конфликт фикс ---
+    implementation("com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava")
 }
+
+private fun DependencyHandlerScope.kapt(string: String) {}

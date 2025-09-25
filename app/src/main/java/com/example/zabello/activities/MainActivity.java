@@ -12,6 +12,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.zabello.R;
+import com.example.zabello.domain.alerts.NotificationHelper;
+import com.example.zabello.domain.alerts.NotificationScheduler;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -62,6 +64,13 @@ public class MainActivity extends AppCompatActivity {
         if (bottomNav != null && navController != null) {
             NavigationUI.setupWithNavController(bottomNav, navController);
         }
+
+        // --- Канал уведомлений + периодические проверки аномалий ---
+        // Канал уведомлений (на случай, если Application ещё не создавал)
+        NotificationHelper.createChannels(this);
+        // Поставим (или обновим) периодические проверки аномалий.
+        // Идемпотентно: внутри используется enqueueUniquePeriodicWork.
+        NotificationScheduler.schedulePeriodicChecks(getApplicationContext());
 
         // --- Правильная обработка системной "назад" вместо deprecated onBackPressed() ---
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
