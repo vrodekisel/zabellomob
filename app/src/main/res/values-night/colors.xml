@@ -3,13 +3,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- App palette -->
-    <color name="md_primary">#A0D9A2</color>    <!-- светло-зелёный -->
-    <color name="md_secondary">#66B698</color>  <!-- мятный -->
-    <color name="md_tertiary">#D97C5A</color>  <!-- терракотовый -->
-    <color name="md_ripple">#6678A97A</color> <!-- полупрозрачный твой md_primary -->
+    <!-- App palette (dark theme) -->
+    <color name="md_primary">#6BAF6D</color>    <!-- тёмно-зелёный, приглушённый -->
+    <color name="md_secondary">#4C8F77</color>  <!-- более глубокий мятный -->
+    <color name="md_tertiary">#B86345</color>   <!-- более мягкий тёмный терракотовый -->
+    <color name="md_ripple">#445C7A5C</color>   <!-- полупрозрачный на тёмном фоне -->
 
-    <!-- контейнер для выбранных Чипов, индикатора навбара и FAB -->
-    <color name="md_secondary_container">#BFE6D7</color>
-    <color name="md_on_secondary_container">#0C2E25</color>
+    <!-- Контейнеры и элементы управления -->
+    <color name="md_secondary_container">#2A3F36</color> <!-- глубокий тёмно-зелёный контейнер -->
+    <color name="md_on_secondary_container">#CDE7DD</color> <!-- светлый текст на контейнере -->
 </resources>

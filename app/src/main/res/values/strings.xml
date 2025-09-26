@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">zabello</string>
+    <string name="app_name">Zabello</string>
 
     <!-- Заголовки экранов -->
     <string name="title_dashboard">Сводная</string>
     <string name="title_reference">Статьи</string>
-    <string name="title_stats">Общая статистика</string>
+    <string name="title_stats">Общая Статистика</string>
     <string name="title_profile">Профиль</string>
 
     <!-- Подписи в нижней панели -->
@@ -16,38 +16,38 @@
     <string name="hello_blank_fragment">Заглушка</string>
 
     <string name="action_add">Добавить</string>
-    <string name="dialog_add_entry_title">Новая запись</string>
+    <string name="dialog_add_entry_title">Новая Запись</string>
     <string name="hint_value">Значение</string>
-    <string name="dashboard_anomalies">Аномалии (последние записи): %1$d</string>
+    <string name="dashboard_anomalies">Аномалии (Последние Записи): %1$d</string>
     <string name="dashboard_anomalies_placeholder">Аномалии: –</string>
     <string name="item_entry_title">Тип #%1$d — %2$.2f</string>
 
-    <string name="hint_search">Поиск по заголовку/тегам</string>
+    <string name="hint_search">Поиск По Заголовку/Тегам</string>
 
     <string name="profile_fullname">ФИО</string>
-    <string name="profile_no_birthdate">Дата рождения не указана</string>
-    <string name="profile_pick_date">Выбрать дату</string>
-    <string name="profile_height">Рост (см)</string>
-    <string name="profile_weight">Вес (кг)</string>
+    <string name="profile_no_birthdate">Дата Рождения Не Указана</string>
+    <string name="profile_pick_date">Выбрать Дату</string>
+    <string name="profile_height">Рост (См)</string>
+    <string name="profile_weight">Вес (Кг)</string>
     <string name="profile_logout">Выйти</string>
     <string name="profile_hello">Профиль • %1$s</string>
 
     <string name="action_save">Сохранить</string>
 
-    <string name="stats_chip_7">7 дней</string>
-    <string name="stats_chip_30">30 дней</string>
-    <string name="stats_chip_90">90 дней</string>
+    <string name="stats_chip_7">7 Дней</string>
+    <string name="stats_chip_30">30 Дней</string>
+    <string name="stats_chip_90">90 Дней</string>
     <string name="stats_chip_all">Все</string>
 
-    <!-- Parameter types and options -->
+    <!-- Показатели -->
     <string name="param_temp">Температура</string>
-    <string name="param_bp_sys">Давление (сист.)</string>
-    <string name="param_bp_dia">Давление (диаст.)</string>
+    <string name="param_bp_sys">Давление (Сист.)</string>
+    <string name="param_bp_dia">Давление (Диаст.)</string>
     <string name="param_hr">Пульс</string>
     <string name="param_sleep">Сон</string>
     <string name="param_mood">Настроение</string>
     <string name="param_food">Питание</string>
-    <string name="param_wellbeing">Общее самочувствие</string>
+    <string name="param_wellbeing">Общее Самочувствие</string>
     <string name="param_weight">Вес</string>
     <string name="param_glucose">Глюкоза</string>
     <string name="param_activity">Активность</string>
@@ -57,12 +57,12 @@
     <string name="option_mood_neutral">Нейтральное</string>
     <string name="option_mood_bad">Плохое</string>
 
-    <string name="option_food_good">Питался хорошо</string>
+    <string name="option_food_good">Питался Хорошо</string>
     <string name="option_food_under">Недоедал</string>
     <string name="option_food_over">Переедал</string>
-    <string name="option_food_fastfood">Ел много фастфуда</string>
+    <string name="option_food_fastfood">Ел Много Фастфуда</string>
 
-    <string name="option_activity_none">Не занимался</string>
+    <string name="option_activity_none">Не Занимался</string>
     <string name="option_activity_light">Лёгкая</string>
     <string name="option_activity_medium">Средняя</string>
     <string name="option_activity_high">Высокая</string>
@@ -70,39 +70,38 @@
     <string name="hint_bp_sys">Систолическое</string>
     <string name="hint_bp_dia">Диастолическое</string>
     <string name="hint_text">Текст</string>
-    <string name="label_skip">Оставить прочерк (пропустить)</string>
-    <string name="msg_skipped">Показатель пропущен</string>
+    <string name="label_skip">Оставить Прочерк (Пропустить)</string>
+    <string name="msg_skipped">Показатель Пропущен</string>
     <string name="msg_saved">Сохранено</string>
-    <string name="msg_select_type">Выберите показатель</string>
+    <string name="msg_select_type">Выберите Показатель</string>
 
-    <!-- Validation -->
-    <string name="error_required">Поле обязательно</string>
-    <string name="error_number">Введите корректное число</string>
-    <string name="error_range">Допустимый диапазон: %1$.2f – %2$.2f</string>
+    <!-- Проверка -->
+    <string name="error_required">Поле Обязательно</string>
+    <string name="error_number">Введите Корректное Число</string>
+    <string name="error_range">Допустимый Диапазон: %1$.2f – %2$.2f</string>
 
-    <!-- Notifications -->
-    <string name="channel_anomalies_name">Медицинские алерты</string>
-    <string name="channel_anomalies_desc">Уведомления о выходе показателей за допустимые пределы</string>
+    <!-- Уведомления -->
+    <string name="channel_anomalies_name">Медицинские Оповещения</string>
+    <string name="channel_anomalies_desc">Уведомления О Выходе Показателей За Допустимые Пределы</string>
     <string name="notif_anomaly_title">Аномалия: %1$s</string>
-    <string name="notif_anomaly_text_value">Получено значение: %1$s.</string>
-    <string name="notif_anomaly_text_rule">Порог правила: %1$s – %2$s.</string>
-    <string name="notif_anomaly_text_type">Нормальный диапазон: %1$s – %2$s.</string>
+    <string name="notif_anomaly_text_value">Получено Значение: %1$s.</string>
+    <string name="notif_anomaly_text_rule">Порог Правила: %1$s – %2$s.</string>
+    <string name="notif_anomaly_text_type">Нормальный Диапазон: %1$s – %2$s.</string>
 
-
-    <!-- Chart -->
+    <!-- График -->
     <string name="stats_chart_label">Тренд: %1$s (%2$s)</string>
 
     <!-- Состояния / график -->
-    <string name="state_empty">Пока ничего нет</string>
+    <string name="state_empty">Пока Ничего Нет</string>
     <string name="state_loading">Загрузка…</string>
-    <string name="state_error">Ошибка загрузки</string>
+    <string name="state_error">Ошибка Загрузки</string>
 
-    <string name="add_parameter_value">Добавить значение</string>
+    <string name="add_parameter_value">Добавить Значение</string>
     <string name="enter_value">Значение</string>
     <string name="save">Сохранить</string>
 
-    <string name="add_record_title">Новая запись</string>
-    <string name="enter_note_short">Текст заметки</string>
+    <string name="add_record_title">Новая Запись</string>
+    <string name="enter_note_short">Текст Заметки</string>
 
     <string name="saved_ok">Сохранено</string>
 </resources>
