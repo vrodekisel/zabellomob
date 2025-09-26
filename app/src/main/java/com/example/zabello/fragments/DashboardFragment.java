@@ -78,10 +78,22 @@ public class DashboardFragment extends Fragment {
                     getChildFragmentManager(),
                     userId,
                     (saved) -> {
-                        // Гарантируем вызов тоста на главном потоке
-                        if (isAdded()) requireActivity().runOnUiThread(
-                                () -> Toast.makeText(requireContext(), "Добавлено", Toast.LENGTH_SHORT).show()
-                        );
+                        if (saved == null) {
+                            if (isAdded()) requireActivity().runOnUiThread(
+                                    () -> Toast.makeText(requireContext(), R.string.state_error, Toast.LENGTH_SHORT).show()
+                            );
+                            return;
+                        }
+                        // ВАЖНО: сохраняем через VM → Repo → Room, чтобы обновились список и статистика
+                        viewModel.addEntry(saved, id -> {
+                            if (isAdded()) requireActivity().runOnUiThread(
+                                    () -> Toast.makeText(
+                                            requireContext(),
+                                            getString(R.string.saved_ok, ""),
+                                            Toast.LENGTH_SHORT
+                                    ).show()
+                            );
+                        });
                     }
             );
         });

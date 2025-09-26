@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.zabello.R;
 import com.example.zabello.data.entity.Article;
 import com.example.zabello.ui.list.ArticleAdapter;
+import com.example.zabello.utils.FilterPrefs;
 import com.example.zabello.viewmodel.ReferenceViewModel;
 
 import java.util.List;
@@ -27,26 +30,31 @@ public class ReferenceFragment extends Fragment {
 
     private ReferenceViewModel vm;
     private ArticleAdapter adapter;
+    private FilterPrefs prefs;
+
+    private EditText etSearch;
+    private RecyclerView rv;
+    private ProgressBar progress;
+    private TextView tvEmpty;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        // ВАЖНО: инфлейтим R.layout.fragment_reference
         return inflater.inflate(R.layout.fragment_reference, container, false);
     }
 
     @Override
-    public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(v, savedInstanceState);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        RecyclerView rv = v.findViewById(R.id.rvArticles);
-        EditText etSearch = v.findViewById(R.id.etSearch);
+        prefs = new FilterPrefs(requireContext());
 
-        // Если id не найдены — это сразу заметно и не упадёт втихую
-        if (rv == null) throw new IllegalStateException("fragment_reference.xml должен содержать RecyclerView с id=rvArticles");
-        if (etSearch == null) throw new IllegalStateException("fragment_reference.xml должен содержать EditText с id=etSearch");
+        etSearch = view.findViewById(R.id.etSearch);
+        rv = view.findViewById(R.id.rvArticles);
+        progress = view.findViewById(R.id.progress);
+        tvEmpty = view.findViewById(R.id.tvEmpty);
 
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new ArticleAdapter(this::openDetails);
@@ -55,17 +63,31 @@ public class ReferenceFragment extends Fragment {
         vm = new ViewModelProvider(requireActivity()).get(ReferenceViewModel.class);
         vm.getArticles().observe(getViewLifecycleOwner(), this::render);
 
+        // Restore query
+        String last = prefs.getRefQuery();
+        if (last != null && !last.isEmpty()) {
+            etSearch.setText(last);
+            etSearch.setSelection(last.length());
+            vm.setQuery(last);
+        }
+
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                vm.setQuery(s != null ? s.toString() : "");
+                String q = s != null ? s.toString() : "";
+                prefs.setRefQuery(q);
+                // показать индикатор при потенциальном удалённом поиске
+                progress.setVisibility(q.trim().length() >= 2 ? View.VISIBLE : View.GONE);
+                vm.setQuery(q);
             }
             @Override public void afterTextChanged(Editable s) {}
         });
     }
 
     private void render(List<Article> list) {
+        progress.setVisibility(View.GONE);
         adapter.submitList(list);
+        tvEmpty.setVisibility(list == null || list.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
     private void openDetails(Article a) {

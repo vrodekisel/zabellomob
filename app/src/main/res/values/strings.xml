@@ -87,4 +87,22 @@
     <string name="notif_anomaly_text_value">Получено значение: %1$s.</string>
     <string name="notif_anomaly_text_rule">Порог правила: %1$s – %2$s.</string>
     <string name="notif_anomaly_text_type">Нормальный диапазон: %1$s – %2$s.</string>
+
+
+    <!-- Chart -->
+    <string name="stats_chart_label">Тренд: %1$s (%2$s)</string>
+
+    <!-- Состояния / график -->
+    <string name="state_empty">Пока ничего нет</string>
+    <string name="state_loading">Загрузка…</string>
+    <string name="state_error">Ошибка загрузки</string>
+
+    <string name="add_parameter_value">Добавить значение</string>
+    <string name="enter_value">Значение</string>
+    <string name="save">Сохранить</string>
+
+    <string name="add_record_title">Новая запись</string>
+    <string name="enter_note_short">Текст заметки</string>
+
+    <string name="saved_ok">Сохранено</string>
 </resources>

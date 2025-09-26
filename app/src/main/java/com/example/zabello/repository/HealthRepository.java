@@ -5,10 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import androidx.lifecycle.LiveData;
-
-import com.example.zabello.domain.alerts.NotificationHelper;
-import com.example.zabello.domain.alerts.NotificationScheduler;
-import com.example.zabello.domain.alerts.ThresholdEvaluator;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.zabello.data.dao.AlertRuleDao;
 import com.example.zabello.data.dao.ArticleDao;
@@ -24,8 +21,12 @@ import com.example.zabello.data.entity.ChronicCondition;
 import com.example.zabello.data.entity.ParameterEntry;
 import com.example.zabello.data.entity.ParameterType;
 import com.example.zabello.data.entity.User;
+import com.example.zabello.domain.alerts.NotificationHelper;
+import com.example.zabello.domain.alerts.NotificationScheduler;
+import com.example.zabello.domain.alerts.ThresholdEvaluator;
 import com.example.zabello.network.RemoteArticleService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -35,7 +36,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/** Репозиторий для параметров/правил/статистики + методы работы с пользователем (для RegisterActivity). */
+/** Репозиторий для параметров/правил/статистики + методы работы с пользователем. */
 public class HealthRepository {
 
     public interface Callback<T> { void onResult(T value); }
@@ -116,7 +117,6 @@ public class HealthRepository {
     // ---------------- Users ----------------
     public LiveData<User> getUserLive(long id) { return userDao.getById(id); }
 
-    /** Проверка — занят ли логин. Используем уже существующий countByLoginSync. */
     public void isLoginTaken(String login, Callback<Boolean> cb) {
         io.execute(() -> {
             boolean taken = userDao.countByLoginSync(login) > 0;
@@ -124,7 +124,6 @@ public class HealthRepository {
         });
     }
 
-    /** Вставка нового пользователя. */
     public void insertUser(User u, Callback<Long> cb) {
         io.execute(() -> {
             long id = userDao.insert(u);
@@ -132,7 +131,13 @@ public class HealthRepository {
         });
     }
 
-    /** Авторизация — используем уже существующий signInSync. */
+    public void updateUser(User u, Callback<Integer> cb) {
+        io.execute(() -> {
+            int n = userDao.update(u);
+            if (cb != null) main.post(() -> cb.onResult(n));
+        });
+    }
+
     public void signIn(String login, String passwordHash, Callback<User> cb) {
         io.execute(() -> {
             User user = userDao.signInSync(login, passwordHash);
@@ -140,7 +145,25 @@ public class HealthRepository {
         });
     }
 
+    // ---------------- Types ----------------
+    public LiveData<List<ParameterType>> getAllTypes() { return typeDao.getAll(); }
+
     // ---------------- Entries ----------------
+    public LiveData<List<ParameterEntry>> getEntriesByUser(long userId) { return entryDao.getByUser(userId); }
+
+    /** НУЖНЫЙ ДЛЯ StatsViewModel метод: (long userId, Long typeId) — с null-защитой. */
+    public LiveData<List<ParameterEntry>> getEntriesByType(long userId, Long typeId) {
+        if (typeId == null) {
+            return new MutableLiveData<>(new ArrayList<>());
+        }
+        return entryDao.getByUserAndType(userId, typeId);
+    }
+
+    /** Алиас, если где-то в коде вызывается по другому имени. */
+    public LiveData<List<ParameterEntry>> getEntriesByUserAndType(long userId, long typeId) {
+        return entryDao.getByUserAndType(userId, typeId);
+    }
+
     public void insertEntry(ParameterEntry e, Callback<Long> cb) {
         io.execute(() -> {
             long id = entryDao.insert(e);
@@ -150,8 +173,7 @@ public class HealthRepository {
                 ParameterType type = typeDao.getByIdSync(e.typeId);
                 List<AlertRule> rules = ruleDao.getForUserSync(e.userId);
                 if (type != null) {
-                    com.example.zabello.domain.alerts.ThresholdEvaluator.Result r =
-                            ThresholdEvaluator.evaluate(e.value, type, rules);
+                    ThresholdEvaluator.Result r = ThresholdEvaluator.evaluate(e.value, type, rules);
                     if (r.anomalous) {
                         String unit = type.unit != null ? type.unit : "";
                         String val = String.format(java.util.Locale.getDefault(), "%.2f%s", e.value,
@@ -236,7 +258,7 @@ public class HealthRepository {
     // ---------------- Remote articles (stage 3.5) ----------------
     public void searchArticlesRemote(String query, Callback<Integer> cb) {
         io.execute(() -> {
-            // Заглушка: сеть не дёргаем; как подключим – сделаем upsert и вернём count
+            // Заглушка (интеграция будет позже)
             if (cb != null) main.post(() -> cb.onResult(0));
         });
     }

@@ -1,188 +1,245 @@
 package com.example.zabello.ui.dialogs;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
 
 import com.example.zabello.R;
 import com.example.zabello.data.entity.ParameterEntry;
 import com.example.zabello.data.entity.ParameterType;
 import com.example.zabello.repository.HealthRepository;
-import com.example.zabello.utils.ValidationLogic;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-public class ParameterEntryDialog extends androidx.fragment.app.DialogFragment {
+/**
+ * Диалог "Новая запись":
+ * 1) выбор типа показателя (Spinner)
+ * 2) ввод значения (число) ИЛИ выбор категории (Spinner) для категориальных типов
+ */
+public class ParameterEntryDialog extends DialogFragment {
 
-    public interface OnSaved { void onSaved(long id); }
+    private static final String ARG_USER_ID = "arg.userId";
+    private static final String TAG = "ParameterEntryDialog";
 
-    private static final String ARG_USER_ID = "userId";
+    public interface OnSavedListener { void onSaved(@Nullable ParameterEntry saved); }
+    private OnSavedListener onSavedListener;
 
-    public static ParameterEntryDialog newInstance(long userId, OnSaved cb) {
+    public static void show(@NonNull FragmentManager fm, long userId, @NonNull OnSavedListener cb) {
         ParameterEntryDialog d = new ParameterEntryDialog();
         Bundle b = new Bundle();
         b.putLong(ARG_USER_ID, userId);
         d.setArguments(b);
-        d.onSaved = cb;
-        return d;
+        d.setOnSavedListener(cb);
+        d.show(fm, TAG);
     }
 
-    private OnSaved onSaved;
+    public void setOnSavedListener(@NonNull OnSavedListener cb) { this.onSavedListener = cb; }
 
-    private Spinner spTypes;
+    // UI
+    private Spinner spType;
+    private TextView tvUnit;
     private EditText etValue;
-    private TextInputLayout tilValue;
-    private View groupBp;
-    private EditText etBpSys, etBpDia;
-    private TextInputLayout tilBpSys, tilBpDia;
     private Spinner spCategory;
-    private EditText etText;
-    private TextInputLayout tilText;
-    private CheckBox cbSkip;
 
-    private ArrayAdapter<String> spinnerAdapter;
-    private final List<ParameterType> currentTypes = new ArrayList<>();
+    // data
+    private HealthRepository repo;
+    private final List<ParameterType> types = new ArrayList<>();
+    private ArrayAdapter<String> typesAdapter;
+    private ArrayAdapter<String> categoryAdapter;
 
-    @SuppressLint("MissingInflatedId")
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        var ctx = requireContext();
-        var root = LayoutInflater.from(ctx).inflate(R.layout.dialog_parameter_entry, null, false);
+        repo = new HealthRepository(requireContext());
 
-        spTypes = root.findViewById(R.id.spTypes);
-        tilValue = root.findViewById(R.id.tilValue);
-        etValue = root.findViewById(R.id.etValue);
-        groupBp = root.findViewById(R.id.groupBp);
-        tilBpSys = root.findViewById(R.id.tilBpSys);
-        etBpSys = root.findViewById(R.id.etBpSys);
-        tilBpDia = root.findViewById(R.id.tilBpDia);
-        etBpDia = root.findViewById(R.id.etBpDia);
-        spCategory = root.findViewById(R.id.spCategory);
-        tilText = root.findViewById(R.id.tilText);
-        etText = root.findViewById(R.id.etText);
-        cbSkip = root.findViewById(R.id.cbSkip);
+        LayoutInflater inflater = LayoutInflater.from(requireContext());
+        LinearLayout root = new LinearLayout(requireContext());
+        root.setOrientation(LinearLayout.VERTICAL);
+        int pad = (int) (16 * requireContext().getResources().getDisplayMetrics().density);
+        root.setPadding(pad, pad, pad, 0);
 
-        spinnerAdapter = new ArrayAdapter<>(ctx, android.R.layout.simple_spinner_dropdown_item, new ArrayList<>());
-        spTypes.setAdapter(spinnerAdapter);
+        // --- Type spinner
+        spType = new Spinner(requireContext());
+        typesAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, new ArrayList<>());
+        spType.setAdapter(typesAdapter);
+        root.addView(spType);
 
-        // дальше вся твоя логика подстановки типов/опций (оставил как было)...
+        // --- Unit / value
+        LinearLayout valueRow = new LinearLayout(requireContext());
+        valueRow.setOrientation(LinearLayout.HORIZONTAL);
+        valueRow.setPadding(0, pad / 2, 0, 0);
 
-        return new MaterialAlertDialogBuilder(ctx)
-                .setTitle(R.string.dialog_add_entry_title)
+        etValue = new EditText(requireContext());
+        etValue.setHint(R.string.enter_value);
+        etValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        etValue.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+
+        tvUnit = new TextView(requireContext());
+        tvUnit.setText("");
+        tvUnit.setPadding(pad, 0, 0, 0);
+
+        valueRow.addView(etValue);
+        valueRow.addView(tvUnit);
+        root.addView(valueRow);
+
+        // --- Category spinner (для MOOD / FOOD / ACTIVITY)
+        spCategory = new Spinner(requireContext());
+        categoryAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, new ArrayList<>());
+        spCategory.setAdapter(categoryAdapter);
+        spCategory.setVisibility(View.GONE);
+        root.addView(spCategory);
+
+        // observe types
+        repo.getAllTypes().observe(this, new Observer<List<ParameterType>>() {
+            @Override public void onChanged(List<ParameterType> list) {
+                types.clear();
+                if (list != null) types.addAll(list);
+                List<String> titles = new ArrayList<>();
+                for (ParameterType t : types) titles.add(t.title);
+                typesAdapter.clear();
+                typesAdapter.addAll(titles);
+                typesAdapter.notifyDataSetChanged();
+
+                // выберем первый доступный тип
+                if (!types.isEmpty()) spType.setSelection(0);
+                updateInputsForSelectedType();
+            }
+        });
+
+        spType.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
+                updateInputsForSelectedType();
+            }
+            @Override public void onNothingSelected(android.widget.AdapterView<?> parent) { }
+        });
+
+        AlertDialog.Builder b = new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.add_record_title)
                 .setView(root)
-                .setPositiveButton(R.string.action_save, (d, w) -> save())
-                .setNegativeButton(android.R.string.cancel, null)
-                .create();
+                .setNegativeButton(android.R.string.cancel, (d, w) -> d.dismiss())
+                .setPositiveButton(R.string.save, (d, w) -> onSave());
+
+        return b.create();
     }
 
-    private void updateInputsVisibility() {
-        int pos = spTypes.getSelectedItemPosition();
-        if (pos < 0 || pos >= currentTypes.size()) {
-            if (tilValue != null) tilValue.setVisibility(View.GONE);
-            groupBp.setVisibility(View.GONE);
+    private void updateInputsForSelectedType() {
+        int pos = spType.getSelectedItemPosition();
+        if (pos < 0 || pos >= types.size()) {
+            etValue.setVisibility(View.VISIBLE);
+            tvUnit.setText("");
             spCategory.setVisibility(View.GONE);
-            if (tilText != null) tilText.setVisibility(View.GONE);
             return;
         }
-        ParameterType t = currentTypes.get(pos);
-        String code = t.code != null ? t.code : "";
+        ParameterType t = types.get(pos);
 
-        // ... остальная логика видимости как была ...
-    }
+        String code = safe(t.code);
+        String unit = safe(t.unit);
+        tvUnit.setText(unit);
 
-    private void save() {
-        long userId = getArguments() != null ? getArguments().getLong(ARG_USER_ID, 0) : 0;
-        if (userId <= 0) {
-            Toast.makeText(requireContext(), "Нет пользователя", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        int pos = spTypes.getSelectedItemPosition();
-        if (pos < 0 || pos >= currentTypes.size()) {
-            Toast.makeText(requireContext(), getString(R.string.msg_select_type), Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (cbSkip.isChecked()) {
-            Toast.makeText(requireContext(), getString(R.string.msg_skipped), Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        ParameterType type = currentTypes.get(pos);
-        String code = type.code != null ? type.code : "";
-
-        List<ParameterEntry> toInsert = new ArrayList<>();
-
-        if (code.equals("MOOD") || code.equals("FOOD") || code.equals("ACTIVITY")) {
-            String txt = (String) spCategory.getSelectedItem();
-            if (TextUtils.isEmpty(txt)) {
-                Toast.makeText(requireContext(), "Выберите вариант", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            ParameterEntry e = new ParameterEntry();
-            e.userId = userId;
-            e.typeId = type.id;
-            e.value = 0f; // категориальные — не для графиков
-            e.note = txt;
-            e.timestamp = new java.util.Date();
-            toInsert.add(e);
-        } else if (code.equals("WELLBEING")) {
-            String txt = etText.getText().toString().trim();
-            if (tilText != null) tilText.setError(null);
-            if (TextUtils.isEmpty(txt)) {
-                if (tilText != null) tilText.setError(getString(R.string.error_required));
-                return;
-            }
-            ParameterEntry e = new ParameterEntry();
-            e.userId = userId;
-            e.typeId = type.id;
-            e.value = 0f; // не для статистики
-            e.note = txt;
-            e.timestamp = new java.util.Date();
-            toInsert.add(e);
+        // Категориальные коды → показываем спиннер
+        if ("MOOD".equalsIgnoreCase(code)) {
+            showCategory(new String[]{"Плохое", "Ниже среднего", "Нормальное", "Хорошее", "Отличное"});
+        } else if ("FOOD".equalsIgnoreCase(code)) {
+            showCategory(new String[]{"Пропуск", "Лёгкий приём", "Обычный", "Плотный"});
+        } else if ("ACTIVITY".equalsIgnoreCase(code)) {
+            showCategory(new String[]{"Не занимался", "Лёгкая", "Средняя", "Высокая"});
+        } else if ("WELLBEING".equalsIgnoreCase(code)) {
+            // текстовая заметка — оставляем EditText, убираем категорию
+            hideCategory();
+            etValue.setHint(R.string.enter_note_short);
+            etValue.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         } else {
-            String valueStr = etValue.getText().toString().trim();
-            if (tilValue != null) tilValue.setError(null);
-            Float value = ValidationLogic.tryParseFloat(valueStr);
-            String err = ValidationLogic.validateValueForType(type, value,
-                    getString(R.string.error_required),
-                    getString(R.string.error_number),
-                    getString(R.string.error_range));
-            if (err != null) {
-                if (tilValue != null) tilValue.setError(err);
-                return;
+            // числовой тип
+            hideCategory();
+            etValue.setHint(R.string.enter_value);
+            etValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        }
+    }
+
+    private void showCategory(String[] items) {
+        etValue.setVisibility(View.GONE);
+        spCategory.setVisibility(View.VISIBLE);
+        categoryAdapter.clear();
+        for (String s : items) categoryAdapter.add(s);
+        categoryAdapter.notifyDataSetChanged();
+        if (items.length > 0) spCategory.setSelection(0);
+    }
+
+    private void hideCategory() {
+        etValue.setVisibility(View.VISIBLE);
+        spCategory.setVisibility(View.GONE);
+        categoryAdapter.clear();
+        categoryAdapter.notifyDataSetChanged();
+    }
+
+    private void onSave() {
+        int pos = spType.getSelectedItemPosition();
+        if (pos < 0 || pos >= types.size()) {
+            if (onSavedListener != null) onSavedListener.onSaved(null);
+            return;
+        }
+        long userId = getArguments() != null ? getArguments().getLong(ARG_USER_ID, -1L) : -1L;
+        if (userId <= 0L) {
+            if (onSavedListener != null) onSavedListener.onSaved(null);
+            return;
+        }
+        ParameterType t = types.get(pos);
+
+        ParameterEntry pe = new ParameterEntry();
+        pe.userId = userId;
+        pe.typeId = t.id;
+        pe.timestamp = new Date();
+
+        String code = safe(t.code);
+
+        if (spCategory.getVisibility() == View.VISIBLE) {
+            // категориальный — сохраняем индекс выбранного пункта как value
+            int idx = spCategory.getSelectedItemPosition();
+            if (idx < 0) idx = 0;
+            pe.value = (float) idx; // 0..N
+        } else {
+            if ("WELLBEING".equalsIgnoreCase(code)) {
+                // текстовая заметка — value можно оставить 0
+                String txt = etValue.getText() != null ? etValue.getText().toString().trim() : "";
+                if (TextUtils.isEmpty(txt)) {
+                    // пустую заметку не сохраняем
+                    if (onSavedListener != null) onSavedListener.onSaved(null);
+                    return;
+                }
+                // Если в сущности есть поле note — раскомментируй:
+                // pe.note = txt;
+                pe.value = 0f;
+            } else {
+                // числовое значение
+                try {
+                    String text = etValue.getText() != null ? etValue.getText().toString().trim() : "";
+                    pe.value = text.isEmpty() ? 0f : Float.parseFloat(text.replace(',', '.'));
+                } catch (Exception e) {
+                    pe.value = 0f;
+                }
             }
-            ParameterEntry e = new ParameterEntry();
-            e.userId = userId;
-            e.typeId = type.id;
-            e.value = value != null ? value.floatValue() : 0f;
-            e.timestamp = new java.util.Date();
-            toInsert.add(e);
         }
 
-        HealthRepository repo = new HealthRepository(requireContext());
-        if (toInsert.isEmpty()) return;
-        final int[] left = {toInsert.size()};
-        for (ParameterEntry e : toInsert) {
-            repo.addEntry(e, id -> {
-                left[0]--;
-                if (left[0] == 0 && onSaved != null) onSaved.onSaved(id);
-            });
-        }
-        Toast.makeText(requireContext(), getString(R.string.msg_saved), Toast.LENGTH_SHORT).show();
+        if (onSavedListener != null) onSavedListener.onSaved(pe);
     }
+
+    private static String safe(String s) { return s == null ? "" : s; }
 }

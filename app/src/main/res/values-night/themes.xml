@@ -1,7 +1,26 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+<resources>
+
+    <!-- Минимальная тема для ночного режима -->
     <style name="Base.Theme.Zabello" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <!-- Базовая палитра -->
+        <item name="colorPrimary">@color/md_primary</item>
+        <item name="colorSecondary">@color/md_secondary</item>
+        <item name="colorTertiary">@color/md_tertiary</item>
+
+        <!-- Контейнеры (чтобы не было фиолетовой подсветки) -->
+        <item name="colorSecondaryContainer">@color/md_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/md_on_secondary_container</item>
+
+        <!-- Ripple -->
+        <item name="colorControlHighlight">@color/md_ripple</item>
+
+        <!-- Мелочи -->
+        <item name="android:listDivider">@null</item>
     </style>
+
+    <style name="Theme.Zabello" parent="Base.Theme.Zabello"/>
+
+    <!-- Пустые алиасы, чтобы AAPT не ругался -->
+    <style name="Widget"/>
+    <style name="Widget.Zabello"/>
 </resources>

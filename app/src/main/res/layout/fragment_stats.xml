@@ -21,38 +21,58 @@
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip7"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
+            style="@style/Widget.Material3.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/stats_chip_7" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip30"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
+            style="@style/Widget.Material3.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/stats_chip_30" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip90"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
+            style="@style/Widget.Material3.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/stats_chip_90" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipAll"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
+            style="@style/Widget.Material3.Chip.Filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/stats_chip_all" />
     </com.google.android.material.chip.ChipGroup>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvStats"
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="8dp" />
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvStats"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/tvEmpty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/state_empty"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:visibility="gone" />
+    </FrameLayout>
 
 </LinearLayout>

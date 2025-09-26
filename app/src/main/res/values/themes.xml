@@ -1,9 +1,26 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+<resources>
+
+    <!-- Минимальная, но правильная тема Material 3 -->
     <style name="Base.Theme.Zabello" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Базовая палитра -->
+        <item name="colorPrimary">@color/md_primary</item>
+        <item name="colorSecondary">@color/md_secondary</item>
+        <item name="colorTertiary">@color/md_tertiary</item>
+
+        <!-- ВАЖНО: контейнеры. Именно отсюда бралась фиолетовая подсветка -->
+        <item name="colorSecondaryContainer">@color/md_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/md_on_secondary_container</item>
+
+        <!-- Нежный риппл (по желанию) -->
+        <item name="colorControlHighlight">@color/md_ripple</item>
+
+        <!-- Мелочи -->
+        <item name="android:listDivider">@null</item>
     </style>
 
-    <style name="Theme.Zabello" parent="Base.Theme.Zabello" />
+    <style name="Theme.Zabello" parent="Base.Theme.Zabello"/>
+
+    <!-- Пустые алиасы, чтобы не падало, если где-то в разметке остались старые стили -->
+    <style name="Widget"/>
+    <style name="Widget.Zabello"/>
 </resources>

@@ -97,8 +97,24 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
-    // --- Guava конфликт фикс ---
-    implementation("com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava")
+
+    // --- Retrofit / OkHttp ---
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    // --- Test ---
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
+    // --- Charts ---
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+    implementation("com.google.guava:guava:33.2.1-android")
+
+    implementation("com.google.android.material:material:1.12.0")
 }
 
 private fun DependencyHandlerScope.kapt(string: String) {}
