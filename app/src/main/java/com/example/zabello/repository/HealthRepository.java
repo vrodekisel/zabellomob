@@ -24,6 +24,8 @@ import com.example.zabello.data.entity.User;
 import com.example.zabello.domain.alerts.NotificationHelper;
 import com.example.zabello.domain.alerts.NotificationScheduler;
 import com.example.zabello.domain.alerts.ThresholdEvaluator;
+import com.example.zabello.network.EuropePmcResponse;
+import com.example.zabello.network.RemoteArticleMapper;
 import com.example.zabello.network.RemoteArticleService;
 
 import java.util.ArrayList;
@@ -33,6 +35,8 @@ import java.util.concurrent.Executors;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -258,8 +262,37 @@ public class HealthRepository {
     // ---------------- Remote articles (stage 3.5) ----------------
     public void searchArticlesRemote(String query, Callback<Integer> cb) {
         io.execute(() -> {
-            // Заглушка (интеграция будет позже)
-            if (cb != null) main.post(() -> cb.onResult(0));
+            int saved = 0;
+            try {
+                String q = query == null ? "" : query.trim();
+                if (q.length() < 2) {
+                    // слишком короткий запрос — ничего не делаем
+                    if (cb != null) main.post(() -> cb.onResult(0));
+                    return;
+                }
+
+                // 1. Сетевой запрос к Europe PMC
+                Call<EuropePmcResponse> call = remoteService.search(q, "json", 25, 1);
+                Response<EuropePmcResponse> resp = call.execute();
+
+                if (resp.isSuccessful() && resp.body() != null) {
+                    // 2. Маппинг ответа -> сущности Article
+                    java.util.List<com.example.zabello.data.entity.Article> entities =
+                            RemoteArticleMapper.toEntities(resp.body());
+
+                    // 3. Upsert в Room (кэш)
+                    if (entities != null && !entities.isEmpty()) {
+                        java.util.List<Long> ids = articleDao.upsertAll(entities);
+                        if (ids != null) saved = ids.size();
+                    }
+                }
+            } catch (Exception ignore) {
+                // Можно повесить лог при желании, но не падаем
+            }
+
+            // 4. Колбэк на главный поток
+            final int result = saved;
+            if (cb != null) main.post(() -> cb.onResult(result));
         });
     }
 
