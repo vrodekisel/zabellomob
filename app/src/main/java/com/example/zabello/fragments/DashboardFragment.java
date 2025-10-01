@@ -71,7 +71,7 @@ public class DashboardFragment extends Fragment {
         fab.setOnClickListener(v -> {
             long userId = SessionManager.getInstance(requireContext()).getUserId();
             if (userId <= 0) {
-                Toast.makeText(requireContext(), "Сессия не найдена", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), getString(R.string.session_not_found), Toast.LENGTH_SHORT).show();
                 return;
             }
             ParameterEntryDialog.show(

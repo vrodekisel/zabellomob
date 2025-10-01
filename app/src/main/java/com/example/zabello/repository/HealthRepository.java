@@ -1,5 +1,7 @@
 package com.example.zabello.repository;
 
+import static android.provider.Settings.System.getString;
+
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -7,6 +9,7 @@ import android.os.Looper;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.zabello.R;
 import com.example.zabello.data.dao.AlertRuleDao;
 import com.example.zabello.data.dao.ArticleDao;
 import com.example.zabello.data.dao.ChronicConditionDao;
@@ -87,21 +90,25 @@ public class HealthRepository {
 
         // Первичная инициализация типов параметров
         io.execute(() -> {
-            ensureType("TEMP", "Температура", "°C", 34.0f, 42.0f, null);
-            ensureType("BP_SYS", "Давление (сист.)", "мм рт. ст.", 80f, 200f, null);
-            ensureType("BP_DIA", "Давление (диаст.)", "мм рт. ст.", 40f, 130f, null);
-            ensureType("HR", "Пульс", "уд/мин", 30f, 220f, null);
-            ensureType("SLEEP", "Сон", "часы", 0f, 24f, null);
-            ensureType("MOOD", "Настроение", null, null, null, "Категориальный параметр");
-            ensureType("FOOD", "Питание", null, null, null, "Категориальный параметр");
-            ensureType("WELLBEING", "Общее самочувствие", null, null, null, "Текстовая заметка");
-            ensureType("WEIGHT", "Вес", "кг", 0f, 500f, null);
-            ensureType("GLUCOSE", "Глюкоза", "ммоль/л", 0f, 30f, null);
-            ensureType("ACTIVITY", "Активность", null, null, null, "Категориальный параметр");
+            ensureType("TEMP", getString(R.string.param_temperature), getString(R.string.unit_celsius), 34.0f, 42.0f, null);
+            ensureType("BP_SYS", getString(R.string.param_bp_sys), getString(R.string.unit_mmhg), 80f, 200f, null);
+            ensureType("BP_DIA", getString(R.string.param_bp_dia), getString(R.string.unit_bpm), 40f, 130f, null);
+            ensureType("HR", getString(R.string.param_hr), getString(R.string.unit_hours), 30f, 220f, null);
+            ensureType("SLEEP", getString(R.string.param_sleep), getString(R.string.unit_hours), 0f, 24f, null);
+            ensureType("MOOD", getString(R.string.param_mood), null, null, null, getString(R.string.param_categorical));
+            ensureType("FOOD", getString(R.string.param_food), null, null, null, getString(R.string.param_categorical));
+            ensureType("WELLBEING", getString(R.string.param_wellbeing), null, null, null, getString(R.string.param_text));
+            ensureType("WEIGHT", getString(R.string.param_weight), getString(R.string.unit_kg), 0f, 500f, null);
+            ensureType("GLUCOSE", getString(R.string.param_glucose), getString(R.string.unit_mmol_l), 0f, 30f, null);
+            ensureType("ACTIVITY", getString(R.string.param_activity), null, null, null, getString(R.string.param_categorical));
         });
 
         // Планировщик фоновых проверок
         NotificationScheduler.schedulePeriodicChecks(appContext);
+    }
+
+    private String getString(int resId) {
+        return ""; // TODO: replace with context.getString(resId)
     }
 
     private void ensureType(String code, String title, String unit, Float min, Float max, String desc) {

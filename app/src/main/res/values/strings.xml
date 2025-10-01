@@ -1,107 +1,197 @@
 <resources>
     <string name="app_name">Zabello</string>
 
-    <!-- Заголовки экранов -->
-    <string name="title_dashboard">Сводная</string>
-    <string name="title_reference">Статьи</string>
-    <string name="title_stats">Общая Статистика</string>
-    <string name="title_profile">Профиль</string>
+    <!-- Screen titles -->
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_reference">Articles</string>
+    <string name="title_stats">Statistics</string>
+    <string name="title_profile">Profile</string>
 
-    <!-- Подписи в нижней панели -->
-    <string name="nav_dashboard">Главная</string>
-    <string name="nav_reference">Статьи</string>
-    <string name="nav_stats">Статистика</string>
-    <string name="nav_profile">Профиль</string>
+    <!-- Bottom navigation -->
+    <string name="nav_dashboard">Home</string>
+    <string name="nav_reference">Articles</string>
+    <string name="nav_stats">Stats</string>
+    <string name="nav_profile">Profile</string>
 
-    <string name="hello_blank_fragment">Заглушка</string>
+    <string name="hello_blank_fragment">Placeholder</string>
+    <string name="dashboard_hello">Hello,</string>
 
-    <string name="action_add">Добавить</string>
-    <string name="dialog_add_entry_title">Новая Запись</string>
-    <string name="hint_value">Значение</string>
-    <string name="dashboard_anomalies">Аномалии (Последние Записи): %1$d</string>
-    <string name="dashboard_anomalies_placeholder">Аномалии: –</string>
-    <string name="item_entry_title">Тип #%1$d — %2$.2f</string>
+    <string name="action_add">Add</string>
+    <string name="dialog_add_entry_title">New Entry</string>
+    <string name="hint_value">Value</string>
+    <string name="dashboard_anomalies">Anomalies (Latest Entries): %1$d</string>
+    <string name="dashboard_anomalies_placeholder">Anomalies: –</string>
+    <string name="item_entry_title">Type #%1$d — %2$.2f</string>
 
-    <string name="hint_search">Поиск По Заголовку/Тегам</string>
+    <string name="hint_search">Search by Title/Tags</string>
 
-    <string name="profile_fullname">ФИО</string>
-    <string name="profile_no_birthdate">Дата Рождения Не Указана</string>
-    <string name="profile_pick_date">Выбрать Дату</string>
-    <string name="profile_height">Рост (См)</string>
-    <string name="profile_weight">Вес (Кг)</string>
-    <string name="profile_logout">Выйти</string>
-    <string name="profile_hello">Профиль • %1$s</string>
+    <string name="profile_fullname">Full Name</string>
+    <string name="profile_no_birthdate">Birth Date Not Set</string>
+    <string name="profile_pick_date">Pick Date</string>
+    <string name="profile_height">Height (cm)</string>
+    <string name="profile_weight">Weight (kg)</string>
+    <string name="profile_logout">Logout</string>
+    <string name="profile_hello">Profile • %1$s</string>
 
-    <string name="action_save">Сохранить</string>
+    <string name="action_save">Save</string>
 
-    <string name="stats_chip_7">7 Дней</string>
-    <string name="stats_chip_30">30 Дней</string>
-    <string name="stats_chip_90">90 Дней</string>
-    <string name="stats_chip_all">Все</string>
+    <string name="stats_chip_7">7 Days</string>
+    <string name="stats_chip_30">30 Days</string>
+    <string name="stats_chip_90">90 Days</string>
+    <string name="stats_chip_all">All</string>
 
-    <!-- Показатели -->
-    <string name="param_temp">Температура</string>
-    <string name="param_bp_sys">Давление (Сист.)</string>
-    <string name="param_bp_dia">Давление (Диаст.)</string>
-    <string name="param_hr">Пульс</string>
-    <string name="param_sleep">Сон</string>
-    <string name="param_mood">Настроение</string>
-    <string name="param_food">Питание</string>
-    <string name="param_wellbeing">Общее Самочувствие</string>
-    <string name="param_weight">Вес</string>
-    <string name="param_glucose">Глюкоза</string>
-    <string name="param_activity">Активность</string>
+    <!-- Parameters -->
+    <string name="param_temp">Temperature</string>
+    <string name="param_bp_sys">Blood Pressure (Syst.)</string>
+    <string name="param_bp_dia">Blood Pressure (Diast.)</string>
+    <string name="param_hr">Heart Rate</string>
+    <string name="param_sleep">Sleep</string>
+    <string name="param_mood">Mood</string>
+    <string name="param_food">Nutrition</string>
+    <string name="param_wellbeing">Wellbeing</string>
+    <string name="param_weight">Weight</string>
+    <string name="param_glucose">Glucose</string>
+    <string name="param_activity">Activity</string>
 
-    <string name="option_mood_great">Отличное</string>
-    <string name="option_mood_good">Хорошее</string>
-    <string name="option_mood_neutral">Нейтральное</string>
-    <string name="option_mood_bad">Плохое</string>
+    <string name="option_mood_great">Great</string>
+    <string name="option_mood_good">Good</string>
+    <string name="option_mood_neutral">Neutral</string>
+    <string name="option_mood_bad">Bad</string>
 
-    <string name="option_food_good">Питался Хорошо</string>
-    <string name="option_food_under">Недоедал</string>
-    <string name="option_food_over">Переедал</string>
-    <string name="option_food_fastfood">Ел Много Фастфуда</string>
+    <string name="option_food_good">Ate Well</string>
+    <string name="option_food_under">Undereaten</string>
+    <string name="option_food_over">Overeaten</string>
+    <string name="option_food_fastfood">Too Much Fast Food</string>
 
-    <string name="option_activity_none">Не Занимался</string>
-    <string name="option_activity_light">Лёгкая</string>
-    <string name="option_activity_medium">Средняя</string>
-    <string name="option_activity_high">Высокая</string>
+    <string name="option_activity_none">None</string>
+    <string name="option_activity_light">Light</string>
+    <string name="option_activity_medium">Medium</string>
+    <string name="option_activity_high">High</string>
 
-    <string name="hint_bp_sys">Систолическое</string>
-    <string name="hint_bp_dia">Диастолическое</string>
-    <string name="hint_text">Текст</string>
-    <string name="label_skip">Оставить Прочерк (Пропустить)</string>
-    <string name="msg_skipped">Показатель Пропущен</string>
-    <string name="msg_saved">Сохранено</string>
-    <string name="msg_select_type">Выберите Показатель</string>
+    <string name="hint_bp_sys">Systolic</string>
+    <string name="hint_bp_dia">Diastolic</string>
+    <string name="hint_text">Text</string>
+    <string name="label_skip">Leave Dash (Skip)</string>
+    <string name="msg_skipped">Value Skipped</string>
+    <string name="msg_saved">Saved</string>
+    <string name="msg_select_type">Select Parameter</string>
 
-    <!-- Проверка -->
-    <string name="error_required">Поле Обязательно</string>
-    <string name="error_number">Введите Корректное Число</string>
-    <string name="error_range">Допустимый Диапазон: %1$.2f – %2$.2f</string>
+    <!-- Validation -->
+    <string name="error_required">Field Required</string>
+    <string name="error_number">Enter a Valid Number</string>
+    <string name="error_range">Valid Range: %1$.2f – %2$.2f</string>
 
-    <!-- Уведомления -->
-    <string name="channel_anomalies_name">Медицинские Оповещения</string>
-    <string name="channel_anomalies_desc">Уведомления О Выходе Показателей За Допустимые Пределы</string>
-    <string name="notif_anomaly_title">Аномалия: %1$s</string>
-    <string name="notif_anomaly_text_value">Получено Значение: %1$s.</string>
-    <string name="notif_anomaly_text_rule">Порог Правила: %1$s – %2$s.</string>
-    <string name="notif_anomaly_text_type">Нормальный Диапазон: %1$s – %2$s.</string>
+    <!-- Notifications -->
+    <string name="channel_anomalies_name">Medical Alerts</string>
+    <string name="channel_anomalies_desc">Notifications When Parameters Exceed Limits</string>
+    <string name="notif_anomaly_title">Anomaly: %1$s</string>
+    <string name="notif_anomaly_text_value">Received Value: %1$s.</string>
+    <string name="notif_anomaly_text_rule">Rule Threshold: %1$s – %2$s.</string>
+    <string name="notif_anomaly_text_type">Normal Range: %1$s – %2$s.</string>
 
-    <!-- График -->
-    <string name="stats_chart_label">Тренд: %1$s (%2$s)</string>
+    <!-- Chart -->
+    <string name="stats_chart_label">Trend: %1$s (%2$s)</string>
 
-    <!-- Состояния / график -->
-    <string name="state_empty">Пока Ничего Нет</string>
-    <string name="state_loading">Загрузка…</string>
-    <string name="state_error">Ошибка Загрузки</string>
+    <!-- States / chart -->
+    <string name="state_empty">Nothing Yet</string>
+    <string name="state_loading">Loading…</string>
+    <string name="state_error">Loading Error</string>
 
-    <string name="add_parameter_value">Добавить Значение</string>
-    <string name="enter_value">Значение</string>
-    <string name="save">Сохранить</string>
+    <string name="add_parameter_value">Add Value</string>
+    <string name="enter_value">Value</string>
+    <string name="save">Save</string>
 
-    <string name="add_record_title">Новая Запись</string>
-    <string name="enter_note_short">Текст Заметки</string>
+    <string name="add_record_title">New Record</string>
+    <string name="enter_note_short">Note Text</string>
 
-    <string name="saved_ok">Сохранено</string>
+    <string name="saved_ok">Saved</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_notifications">Notifications</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Auth / Login / Register -->
+    <string name="login_title">Login</string>
+    <string name="register_title">Register</string>
+    <string name="hint_login">Username</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_password_confirm">Repeat password</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_register">Register</string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="no_account">Don’t have an account?</string>
+    <string name="login_success">Welcome</string>
+    <string name="login_error">Invalid username or password</string>
+    <string name="register_success">Registration successful</string>
+    <string name="register_error">Registration failed</string>
+    <string name="error_login_exists">Username already taken</string>
+    <string name="error_short_login">At least 3 characters</string>
+    <string name="error_short_password">At least 6 characters</string>
+    <string name="error_password_mismatch">Passwords do not match</string>
+    <string name="error_login_required">Enter username</string>
+
+    <!-- Dashboard / Anomalies -->
+    <string name="dashboard_title">Dashboard</string>
+    <string name="session_not_found">Session not found</string>
+    <string name="no_data">No data</string>
+    <string name="no_anomalies">No anomalies detected</string>
+
+    <!-- Parameters -->
+    <string name="param_temperature">Temperature</string>
+    <string name="param_pressure_sys">Blood Pressure (systolic)</string>
+    <string name="param_pressure_dia">Blood Pressure (diastolic)</string>
+    <string name="param_pulse">Pulse</string>
+    <string name="param_categorical">Categorical parameter</string>
+    <string name="param_note">Text note</string>
+
+    <!-- Parameter Categories -->
+    <string name="mood_bad">Bad</string>
+    <string name="mood_below_avg">Below Average</string>
+    <string name="mood_normal">Normal</string>
+    <string name="mood_good">Good</string>
+    <string name="mood_excellent">Excellent</string>
+
+    <string name="food_skip">Skip</string>
+    <string name="food_light">Light meal</string>
+    <string name="food_normal">Normal meal</string>
+    <string name="food_heavy">Heavy meal</string>
+
+    <string name="activity_none">No activity</string>
+    <string name="activity_light">Light</string>
+    <string name="activity_medium">Medium</string>
+    <string name="activity_high">High</string>
+
+    <!-- Articles -->
+    <string name="article_title">Title</string>
+    <string name="article_tags">Tags</string>
+    <string name="article_description">Description</string>
+    <string name="article_short_description">Short description</string>
+
+    <!-- Profile -->
+    <string name="profile_title">Profile</string>
+    <string name="logout">Log out</string>
+
+    <!-- Item entry -->
+    <string name="item_type_value">Type # / value</string>
+    <string name="item_date_time">date/time</string>
+
+    <!-- Errors / Toasts -->
+    <string name="error_title">Error</string>
+    <string name="error_message">Something went wrong</string>
+    <string name="btn_retry">Retry</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="data_saved">Data saved</string>
+    <string name="param_text">Text note</string>
+    <string name="unit_celsius">°C</string>
+    <string name="unit_mmhg">mmHg</string>
+    <string name="unit_bpm">bpm</string>
+    <string name="unit_hours">h</string>
+    <string name="unit_kg">kg</string>
+    <string name="unit_mmol_l">mmol/L</string>
+
+    <string name="welcome_with_name">Hello, %1$s!</string>
+    <string name="password_less_then_8">Password less then 8 symbols</string>
+    <string name="gender">gender</string>
+
 </resources>

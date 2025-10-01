@@ -11,7 +11,7 @@
         android:textSize="20sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Заголовок"/>
+        android:text="@string/article_title"/>
 
     <TextView
         android:id="@+id/tvTags"
@@ -19,7 +19,7 @@
         android:textSize="12sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="теги"/>
+        android:text="@string/article_tags"/>
 
     <TextView
         android:id="@+id/tvBody"
@@ -29,5 +29,5 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:text="Текст статьи"/>
+        android:text="@string/article_description"/>
 </LinearLayout>

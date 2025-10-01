@@ -76,7 +76,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void applyMode(boolean loginMode) {
         isLoginMode = loginMode;
-        tvModeTitle.setText(loginMode ? "Вход" : "Регистрация");
+        tvModeTitle.setText(loginMode ? getString(R.string.login_title) : getString(R.string.register_title));
         etPasswordConfirm.setVisibility(loginMode ? android.view.View.GONE : android.view.View.VISIBLE);
         etPasswordConfirm.setText("");
     }
@@ -87,22 +87,22 @@ public class RegisterActivity extends AppCompatActivity {
         String pass2 = etPasswordConfirm.getText().toString();
 
         if (!ValidationLogic.isValidLogin(login)) {
-            etLogin.setError("Минимум 3 символа");
+            etLogin.setError(getString(R.string.error_short_login));
             return;
         }
         if (!ValidationLogic.isValidPassword(pass)) {
-            etPassword.setError("Минимум 6 символов");
+            etPassword.setError(getString(R.string.error_short_password));
             return;
         }
         if (!pass.equals(pass2)) {
-            etPasswordConfirm.setError("Пароли не совпадают");
+            etPasswordConfirm.setError(getString(R.string.error_password_mismatch));
             return;
         }
 
         // 1) Проверяем занят ли логин
         repo.isLoginTaken(login, taken -> runOnUiThread(() -> {
             if (taken) {
-                etLogin.setError("Логин уже занят");
+                etLogin.setError(getString(R.string.error_login_exists));
                 return;
             }
 
@@ -116,10 +116,10 @@ public class RegisterActivity extends AppCompatActivity {
                 if (id > 0) {
                     // сохраняем userId в сессию
                     SessionManager.getInstance(this).setUserId(id);
-                    Toast.makeText(this, "Регистрация успешна", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.register_success), Toast.LENGTH_SHORT).show();
                     openMainAndFinish();
                 } else {
-                    Toast.makeText(this, "Ошибка регистрации", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.register_error), Toast.LENGTH_SHORT).show();
                 }
             }));
         }));
@@ -130,11 +130,11 @@ public class RegisterActivity extends AppCompatActivity {
         String pass = etPassword.getText().toString();
 
         if (!ValidationLogic.isValidLogin(login)) {
-            etLogin.setError("Укажите логин");
+            etLogin.setError(getString(R.string.error_login_required));
             return;
         }
         if (!ValidationLogic.isValidPassword(pass)) {
-            etPassword.setError("Слишком короткий пароль");
+            etPassword.setError(getString(R.string.error_short_password));
             return;
         }
 
@@ -144,10 +144,10 @@ public class RegisterActivity extends AppCompatActivity {
         repo.signIn(login, hash, user -> runOnUiThread(() -> {
             if (user != null) {
                 SessionManager.getInstance(this).setUserId(user.id);
-                Toast.makeText(this, "Добро пожаловать", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
                 openMainAndFinish();
             } else {
-                Toast.makeText(this, "Неверный логин или пароль", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.login_error), Toast.LENGTH_SHORT).show();
             }
         }));
     }

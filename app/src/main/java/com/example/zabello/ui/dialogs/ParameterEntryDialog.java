@@ -156,11 +156,11 @@ public class ParameterEntryDialog extends DialogFragment {
 
         // Категориальные коды → показываем спиннер
         if ("MOOD".equalsIgnoreCase(code)) {
-            showCategory(new String[]{"Плохое", "Ниже среднего", "Нормальное", "Хорошее", "Отличное"});
+            showCategory(new String[]{getString(R.string.mood_bad), getString(R.string.mood_below_avg), getString(R.string.mood_normal), getString(R.string.mood_good), getString(R.string.mood_excellent)});
         } else if ("FOOD".equalsIgnoreCase(code)) {
-            showCategory(new String[]{"Пропуск", "Лёгкий приём", "Обычный", "Плотный"});
+            showCategory(new String[]{getString(R.string.food_skip), getString(R.string.food_light), getString(R.string.food_normal), getString(R.string.food_heavy)});
         } else if ("ACTIVITY".equalsIgnoreCase(code)) {
-            showCategory(new String[]{"Не занимался", "Лёгкая", "Средняя", "Высокая"});
+            showCategory(new String[]{getString(R.string.activity_none), getString(R.string.activity_light), getString(R.string.activity_medium), getString(R.string.activity_high)});
         } else if ("WELLBEING".equalsIgnoreCase(code)) {
             // текстовая заметка — оставляем EditText, убираем категорию
             hideCategory();

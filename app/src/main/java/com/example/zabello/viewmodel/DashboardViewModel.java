@@ -9,6 +9,7 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
+import com.example.zabello.R;
 import com.example.zabello.data.entity.ParameterEntry;
 import com.example.zabello.data.entity.ParameterType;
 import com.example.zabello.data.entity.User;
@@ -42,9 +43,11 @@ public class DashboardViewModel extends AndroidViewModel {
         currentUser = uid > 0 ? repo.getUserLive(uid) : emptyUser;
 
         welcomeText = Transformations.map(currentUser, u -> {
-            if (u == null) return "Добро пожаловать!";
+            if (u == null) {
+                return getApplication().getString(R.string.login_success); // "Welcome"
+            }
             String name = (u.fullName != null && !u.fullName.isEmpty()) ? u.fullName : u.login;
-            return "Привет, " + name + "!";
+            return getApplication().getString(R.string.welcome_with_name, name); // "Hello, name!"
         });
 
         types = repo.getAllTypes();

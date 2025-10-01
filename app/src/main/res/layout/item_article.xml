@@ -16,7 +16,7 @@
             android:textSize="16sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Заголовок"/>
+            android:text="@string/article_title"/>
 
         <TextView
             android:id="@+id/tvTags"
@@ -24,6 +24,6 @@
             android:textSize="12sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="теги"/>
+            android:text="@string/article_tags"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
