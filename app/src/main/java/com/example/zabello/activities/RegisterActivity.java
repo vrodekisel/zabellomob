@@ -32,41 +32,30 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Автологин без мигания экрана логина
         if (SessionManager.getInstance(this).isLoggedIn()) {
             startActivity(new Intent(this, MainActivity.class));
             finish();
             return;
         }
-
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_register);
-
         repo = new HealthRepository(getApplicationContext());
-
         tvModeTitle = findViewById(R.id.tvModeTitle);
         etLogin = findViewById(R.id.etLogin);
         etPassword = findViewById(R.id.etPassword);
         etPasswordConfirm = findViewById(R.id.etPasswordConfirm);
         btnRegister = findViewById(R.id.btnRegister);
         btnLogin = findViewById(R.id.btnLogin);
-
-        // Стартуем в режиме Регистрации
         applyMode(false);
-
         btnRegister.setOnClickListener(v -> {
             if (isLoginMode) {
-                // если находимся в режиме Входа — переключаемся в Регистрацию
                 applyMode(false);
                 return;
             }
             performRegister();
         });
-
         btnLogin.setOnClickListener(v -> {
             if (!isLoginMode) {
-                // если находимся в режиме Регистрации — переключаемся во Вход
                 applyMode(true);
                 return;
             }
@@ -76,7 +65,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void applyMode(boolean loginMode) {
         isLoginMode = loginMode;
-        tvModeTitle.setText(loginMode ? getString(R.string.login_title) : getString(R.string.register_title));
+        btnRegister.setText(loginMode ? "К регистрации" : "Зарегистрироваться");
+        btnLogin.setText(loginMode ? "Войти" : "К входу");
         etPasswordConfirm.setVisibility(loginMode ? android.view.View.GONE : android.view.View.VISIBLE);
         etPasswordConfirm.setText("");
     }
@@ -87,22 +77,22 @@ public class RegisterActivity extends AppCompatActivity {
         String pass2 = etPasswordConfirm.getText().toString();
 
         if (!ValidationLogic.isValidLogin(login)) {
-            etLogin.setError(getString(R.string.error_short_login));
+            etLogin.setError("Минимум 3 символа");
             return;
         }
         if (!ValidationLogic.isValidPassword(pass)) {
-            etPassword.setError(getString(R.string.error_short_password));
+            etPassword.setError("Минимум 6 символов");
             return;
         }
         if (!pass.equals(pass2)) {
-            etPasswordConfirm.setError(getString(R.string.error_password_mismatch));
+            etPasswordConfirm.setError("Пароли не совпадают");
             return;
         }
 
         // 1) Проверяем занят ли логин
         repo.isLoginTaken(login, taken -> runOnUiThread(() -> {
             if (taken) {
-                etLogin.setError(getString(R.string.error_login_exists));
+                etLogin.setError("Логин уже занят");
                 return;
             }
 
@@ -116,10 +106,10 @@ public class RegisterActivity extends AppCompatActivity {
                 if (id > 0) {
                     // сохраняем userId в сессию
                     SessionManager.getInstance(this).setUserId(id);
-                    Toast.makeText(this, getString(R.string.register_success), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Регистрация успешна", Toast.LENGTH_SHORT).show();
                     openMainAndFinish();
                 } else {
-                    Toast.makeText(this, getString(R.string.register_error), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Ошибка регистрации", Toast.LENGTH_SHORT).show();
                 }
             }));
         }));
@@ -130,11 +120,11 @@ public class RegisterActivity extends AppCompatActivity {
         String pass = etPassword.getText().toString();
 
         if (!ValidationLogic.isValidLogin(login)) {
-            etLogin.setError(getString(R.string.error_login_required));
+            etLogin.setError("Укажите логин");
             return;
         }
         if (!ValidationLogic.isValidPassword(pass)) {
-            etPassword.setError(getString(R.string.error_short_password));
+            etPassword.setError("Слишком короткий пароль");
             return;
         }
 
@@ -144,10 +134,10 @@ public class RegisterActivity extends AppCompatActivity {
         repo.signIn(login, hash, user -> runOnUiThread(() -> {
             if (user != null) {
                 SessionManager.getInstance(this).setUserId(user.id);
-                Toast.makeText(this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Добро пожаловать", Toast.LENGTH_SHORT).show();
                 openMainAndFinish();
             } else {
-                Toast.makeText(this, getString(R.string.login_error), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Неверный логин или пароль", Toast.LENGTH_SHORT).show();
             }
         }));
     }

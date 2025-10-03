@@ -47,13 +47,10 @@ public class DashboardFragment extends Fragment {
         tvAnomalies = view.findViewById(R.id.tvAnomalies);
         rv = view.findViewById(R.id.rvEntries);
         FloatingActionButton fab = view.findViewById(R.id.fabAdd);
-
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new ParameterEntryAdapter();
         rv.setAdapter(adapter);
-
         viewModel = new ViewModelProvider(requireActivity()).get(DashboardViewModel.class);
-
         viewModel.getTypes().observe(getViewLifecycleOwner(), types -> {
             if (types != null) {
                 java.util.HashMap<Long, String> map = new java.util.HashMap<>();
@@ -61,13 +58,10 @@ public class DashboardFragment extends Fragment {
                 adapter.setTypeTitles(map);
             }
         });
-
         viewModel.getWelcomeText().observe(getViewLifecycleOwner(), text -> {
             if (tvDashboard != null) tvDashboard.setText(text);
         });
-
         viewModel.getLatestEntries().observe(getViewLifecycleOwner(), this::renderEntries);
-
         fab.setOnClickListener(v -> {
             long userId = SessionManager.getInstance(requireContext()).getUserId();
             if (userId <= 0) {
@@ -84,7 +78,6 @@ public class DashboardFragment extends Fragment {
                             );
                             return;
                         }
-                        // ВАЖНО: сохраняем через VM → Repo → Room, чтобы обновились список и статистика
                         viewModel.addEntry(saved, id -> {
                             if (isAdded()) requireActivity().runOnUiThread(
                                     () -> Toast.makeText(

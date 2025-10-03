@@ -29,11 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Диалог "Новая запись":
- * 1) выбор типа показателя (Spinner)
- * 2) ввод значения (число) ИЛИ выбор категории (Spinner) для категориальных типов
- */
+
 public class ParameterEntryDialog extends DialogFragment {
 
     private static final String ARG_USER_ID = "arg.userId";
@@ -154,7 +150,6 @@ public class ParameterEntryDialog extends DialogFragment {
         String unit = safe(t.unit);
         tvUnit.setText(unit);
 
-        // Категориальные коды → показываем спиннер
         if ("MOOD".equalsIgnoreCase(code)) {
             showCategory(new String[]{getString(R.string.mood_bad), getString(R.string.mood_below_avg), getString(R.string.mood_normal), getString(R.string.mood_good), getString(R.string.mood_excellent)});
         } else if ("FOOD".equalsIgnoreCase(code)) {
@@ -202,33 +197,24 @@ public class ParameterEntryDialog extends DialogFragment {
             return;
         }
         ParameterType t = types.get(pos);
-
         ParameterEntry pe = new ParameterEntry();
         pe.userId = userId;
         pe.typeId = t.id;
         pe.timestamp = new Date();
-
         String code = safe(t.code);
-
         if (spCategory.getVisibility() == View.VISIBLE) {
-            // категориальный — сохраняем индекс выбранного пункта как value
             int idx = spCategory.getSelectedItemPosition();
             if (idx < 0) idx = 0;
-            pe.value = (float) idx; // 0..N
+            pe.value = (float) idx;
         } else {
             if ("WELLBEING".equalsIgnoreCase(code)) {
-                // текстовая заметка — value можно оставить 0
                 String txt = etValue.getText() != null ? etValue.getText().toString().trim() : "";
                 if (TextUtils.isEmpty(txt)) {
-                    // пустую заметку не сохраняем
                     if (onSavedListener != null) onSavedListener.onSaved(null);
                     return;
                 }
-                // Если в сущности есть поле note — раскомментируй:
-                // pe.note = txt;
                 pe.value = 0f;
             } else {
-                // числовое значение
                 try {
                     String text = etValue.getText() != null ? etValue.getText().toString().trim() : "";
                     pe.value = text.isEmpty() ? 0f : Float.parseFloat(text.replace(',', '.'));

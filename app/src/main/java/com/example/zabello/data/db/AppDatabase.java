@@ -42,10 +42,7 @@ import com.example.zabello.data.entity.User;
 )
 @TypeConverters({DateConverters.class, EnumConverters.class})
 public abstract class AppDatabase extends RoomDatabase {
-
     private static volatile AppDatabase INSTANCE;
-
-    // DAO getters
     public abstract UserDao userDao();
     public abstract ParameterTypeDao parameterTypeDao();
     public abstract ParameterEntryDao parameterEntryDao();
@@ -53,12 +50,9 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract ChronicConditionDao chronicConditionDao();
     public abstract SurgeryDao surgeryDao();
     public abstract AlertRuleDao alertRuleDao();
-
-    // Migration 1 -> 2: добавляем все доменные таблицы сверх users
     private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase db) {
-            // parameter_types
             db.execSQL("CREATE TABLE IF NOT EXISTS `parameter_types` (" +
                     "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                     "`code` TEXT NOT NULL, `title` TEXT NOT NULL, `unit` TEXT, " +
@@ -66,7 +60,6 @@ public abstract class AppDatabase extends RoomDatabase {
             db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_parameter_types_code` ON `parameter_types` (`code`)");
             db.execSQL("CREATE INDEX IF NOT EXISTS `index_parameter_types_title` ON `parameter_types` (`title`)");
 
-            // parameter_entries
             db.execSQL("CREATE TABLE IF NOT EXISTS `parameter_entries` (" +
                     "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                     "`userId` INTEGER NOT NULL, `typeId` INTEGER NOT NULL, " +
@@ -77,7 +70,6 @@ public abstract class AppDatabase extends RoomDatabase {
             db.execSQL("CREATE INDEX IF NOT EXISTS `index_parameter_entries_typeId` ON `parameter_entries` (`typeId`)");
             db.execSQL("CREATE INDEX IF NOT EXISTS `index_parameter_entries_timestamp` ON `parameter_entries` (`timestamp`)");
 
-            // articles
             db.execSQL("CREATE TABLE IF NOT EXISTS `articles` (" +
                     "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                     "`slug` TEXT NOT NULL, `title` TEXT NOT NULL, `body` TEXT NOT NULL, " +
@@ -85,7 +77,6 @@ public abstract class AppDatabase extends RoomDatabase {
             db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS `index_articles_slug` ON `articles` (`slug`)");
             db.execSQL("CREATE INDEX IF NOT EXISTS `index_articles_title` ON `articles` (`title`)");
 
-            // chronic_conditions
             db.execSQL("CREATE TABLE IF NOT EXISTS `chronic_conditions` (" +
                     "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, " +
                     "`name` TEXT NOT NULL, `notes` TEXT, `diagnosedAt` INTEGER, " +
@@ -93,7 +84,6 @@ public abstract class AppDatabase extends RoomDatabase {
             db.execSQL("CREATE INDEX IF NOT EXISTS `index_chronic_conditions_userId` ON `chronic_conditions` (`userId`)");
             db.execSQL("CREATE INDEX IF NOT EXISTS `index_chronic_conditions_name` ON `chronic_conditions` (`name`)");
 
-            // surgeries
             db.execSQL("CREATE TABLE IF NOT EXISTS `surgeries` (" +
                     "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER NOT NULL, " +
                     "`name` TEXT NOT NULL, `notes` TEXT, `date` INTEGER, " +
@@ -101,7 +91,6 @@ public abstract class AppDatabase extends RoomDatabase {
             db.execSQL("CREATE INDEX IF NOT EXISTS `index_surgeries_userId` ON `surgeries` (`userId`)");
             db.execSQL("CREATE INDEX IF NOT EXISTS `index_surgeries_date` ON `surgeries` (`date`)");
 
-            // alert_rules
             db.execSQL("CREATE TABLE IF NOT EXISTS `alert_rules` (" +
                     "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                     "`userId` INTEGER, `parameterTypeId` INTEGER NOT NULL, " +
