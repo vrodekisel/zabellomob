@@ -1,0 +1,137 @@
+Subject: [PATCH] fixed strings
+---
+Index: .idea/deploymentTargetSelector.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/deploymentTargetSelector.xml b/.idea/deploymentTargetSelector.xml
+--- a/.idea/deploymentTargetSelector.xml	(revision 6e0aa23b7bda46762e6cba0a8eb76bbe3b14eb18)
++++ b/.idea/deploymentTargetSelector.xml	(revision e3715cca5d94b111c501f2313136f657e0c6a83e)
+@@ -5,9 +5,6 @@
+       <SelectionState runConfigName="app">
+         <option name="selectionMode" value="DROPDOWN" />
+       </SelectionState>
+-      <SelectionState runConfigName="AppSmokeTest">
+-        <option name="selectionMode" value="DROPDOWN" />
+-      </SelectionState>
+     </selectionStates>
+   </component>
+ </project>
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 6e0aa23b7bda46762e6cba0a8eb76bbe3b14eb18)
++++ b/.idea/misc.xml	(revision e3715cca5d94b111c501f2313136f657e0c6a83e)
+@@ -1,4 +1,3 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ExternalStorageConfigurationManager" enabled="true" />
+   <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="jbr-21" project-jdk-type="JavaSDK">
+Index: app/src/main/java/com/example/zabello/repository/HealthRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/zabello/repository/HealthRepository.java b/app/src/main/java/com/example/zabello/repository/HealthRepository.java
+--- a/app/src/main/java/com/example/zabello/repository/HealthRepository.java	(revision 6e0aa23b7bda46762e6cba0a8eb76bbe3b14eb18)
++++ b/app/src/main/java/com/example/zabello/repository/HealthRepository.java	(revision e3715cca5d94b111c501f2313136f657e0c6a83e)
+@@ -1,6 +1,6 @@
+ package com.example.zabello.repository;
+ 
+-import static android.provider.Settings.System.getString;
++
+ 
+ import android.content.Context;
+ import android.os.Handler;
+@@ -108,7 +108,7 @@
+     }
+ 
+     private String getString(int resId) {
+-        return ""; // TODO: replace with context.getString(resId)
++        return appContext.getString(resId);
+     }
+ 
+     private void ensureType(String code, String title, String unit, Float min, Float max, String desc) {
+Index: app/src/main/res/drawable/bg_app_gradient.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/drawable/bg_app_gradient.xml b/app/src/main/res/drawable/bg_app_gradient.xml
+--- a/app/src/main/res/drawable/bg_app_gradient.xml	(revision 6e0aa23b7bda46762e6cba0a8eb76bbe3b14eb18)
++++ b/app/src/main/res/drawable/bg_app_gradient.xml	(revision e3715cca5d94b111c501f2313136f657e0c6a83e)
+@@ -1,6 +1,8 @@
+ <?xml version="1.0" encoding="utf-8"?>
++<shape xmlns:android="http://schemas.android.com/apk/res/android">
+ <gradient xmlns:android="http://schemas.android.com/apk/res/android"
+     android:type="linear"
+     android:angle="90"
+     android:startColor="@color/md_secondary"
+     android:endColor="@color/md_primary"/>
++</shape>
+Index: app/src/main/res/values/strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+--- a/app/src/main/res/values/strings.xml	(revision 6e0aa23b7bda46762e6cba0a8eb76bbe3b14eb18)
++++ b/app/src/main/res/values/strings.xml	(revision e3715cca5d94b111c501f2313136f657e0c6a83e)
+@@ -121,4 +121,52 @@
+     <string name="height_cm">Рост(см)</string>
+     <string name="weight_kg">Вес(кг)</string>
+     <string name="logout">Выйти</string>
++    <string name="login_title">Login</string>
++    <string name="hint_login">Login</string>
++    <string name="hint_password">Password</string>
++    <string name="btn_login">Login</string>
++    <string name="article_title">Article title</string>
++    <string name="article_tags">Article tags</string>
++    <string name="article_description">Article description</string>
++    <string name="dashboard_hello">Dashboard</string>
++    <string name="item_type_value">Item type value</string>
++    <string name="item_date_time">Item date time</string>
++
++    <string name="param_temperature">Температура</string>
++    <string name="unit_celsius">°C</string>
++
++    <string name="unit_mmhg">мм рт. ст.</string>
++
++
++    <string name="unit_bpm">уд/мин</string>
++
++    <string name="unit_hours">ч</string>
++
++    <string name="param_categorical">Категориальный</string>
++    <string name="param_text">Текст</string>
++
++    <string name="unit_kg">кг</string>
++
++    <string name="unit_mmol_l">ммоль/л</string>
++    <string name="session_not_found">Session not found</string>
++    <string name="login_success">Welcome!</string>
++    <string name="welcome_with_name">Hello!</string>
++    <string name="mood_bad">Плохое</string>
++    <string name="mood_below_avg">Ниже среднего</string>
++    <string name="mood_normal">Нормальное</string>
++    <string name="mood_good">Хорошее</string>
++    <string name="mood_excellent">Отличное</string>
++    <string name="food_heavy">Тяжелая</string>
++    <string name="food_normal">Нормальная</string>
++    <string name="food_light">Легкая</string>
++    <string name="food_skip">Пропущена</string>
++    <string name="activity_none">Нет активности</string>
++    <string name="activity_light">Легкая</string>
++    <string name="activity_medium">Средняя</string>
++    <string name="activity_high">Высокая</string>
++    <string name="btn_cancel">Cancel</string>
++    <string name="error_title">Ошибка</string>
++    <string name="error_message">Тип ошибки</string>
++    <string name="btn_retry">Попробовать снова</string>
++
+ </resources>
