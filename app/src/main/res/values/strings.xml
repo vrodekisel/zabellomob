@@ -121,4 +121,52 @@
     <string name="height_cm">Рост(см)</string>
     <string name="weight_kg">Вес(кг)</string>
     <string name="logout">Выйти</string>
+    <string name="login_title">Login</string>
+    <string name="hint_login">Login</string>
+    <string name="hint_password">Password</string>
+    <string name="btn_login">Login</string>
+    <string name="article_title">Article title</string>
+    <string name="article_tags">Article tags</string>
+    <string name="article_description">Article description</string>
+    <string name="dashboard_hello">Dashboard</string>
+    <string name="item_type_value">Item type value</string>
+    <string name="item_date_time">Item date time</string>
+
+    <string name="param_temperature">Температура</string>
+    <string name="unit_celsius">°C</string>
+
+    <string name="unit_mmhg">мм рт. ст.</string>
+
+
+    <string name="unit_bpm">уд/мин</string>
+
+    <string name="unit_hours">ч</string>
+
+    <string name="param_categorical">Категориальный</string>
+    <string name="param_text">Текст</string>
+
+    <string name="unit_kg">кг</string>
+
+    <string name="unit_mmol_l">ммоль/л</string>
+    <string name="session_not_found">Session not found</string>
+    <string name="login_success">Welcome!</string>
+    <string name="welcome_with_name">Hello!</string>
+    <string name="mood_bad">Плохое</string>
+    <string name="mood_below_avg">Ниже среднего</string>
+    <string name="mood_normal">Нормальное</string>
+    <string name="mood_good">Хорошее</string>
+    <string name="mood_excellent">Отличное</string>
+    <string name="food_heavy">Тяжелая</string>
+    <string name="food_normal">Нормальная</string>
+    <string name="food_light">Легкая</string>
+    <string name="food_skip">Пропущена</string>
+    <string name="activity_none">Нет активности</string>
+    <string name="activity_light">Легкая</string>
+    <string name="activity_medium">Средняя</string>
+    <string name="activity_high">Высокая</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="error_title">Ошибка</string>
+    <string name="error_message">Тип ошибки</string>
+    <string name="btn_retry">Попробовать снова</string>
+
 </resources>

@@ -1,6 +1,6 @@
 package com.example.zabello.repository;
 
-import static android.provider.Settings.System.getString;
+
 
 import android.content.Context;
 import android.os.Handler;
@@ -108,7 +108,7 @@ public class HealthRepository {
     }
 
     private String getString(int resId) {
-        return ""; // TODO: replace with context.getString(resId)
+        return appContext.getString(resId);
     }
 
     private void ensureType(String code, String title, String unit, Float min, Float max, String desc) {
